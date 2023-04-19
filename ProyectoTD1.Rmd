@@ -4,3 +4,6 @@ author: "Daniel Macho Collado"
 date: "2023-04-19"
 output: html_document
 ---
+```{r}
+carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
+```
