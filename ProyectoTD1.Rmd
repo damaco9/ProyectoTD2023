@@ -57,4 +57,13 @@ fich_dig
 
 ```
 
+```{r}
+fich <- paste0(carpeta, 'ficheroAnalogico.dat')
+read.filename <- file(fich,'rb')
+tamanyo <- file.info(fich)$size
+
+fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
+fich_dig
+```
+
 
