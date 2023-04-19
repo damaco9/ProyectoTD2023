@@ -6,12 +6,12 @@ output: html_document
 ---
 Carpeta 3:
 ```{r}
-carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
+carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/'
 ```
 
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroAnalogico.dat')
+fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/cabecera_FicheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 cab_fich_anal <- readBin(read.filename, what = integer(),  n = 7, size = 1, signed = TRUE)
 cab_fich_anal
@@ -34,7 +34,7 @@ frecuencia <- cab_fich_anal2[3]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroDigital.dat')
+fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/cabecera_FicheroDigital.dat')
 read.filename <- file(fich,'rb')
 cab_fich_dig <- readBin(read.filename, what = integer(),  n = 8, size = 1)
 cab_fich_dig
@@ -49,7 +49,7 @@ resolucion <- cab_fich_dig[7]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroDigital.dat')
+fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -59,7 +59,7 @@ fich_dig
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroAnalogico.dat')
+fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -71,12 +71,12 @@ fich_anal
 Carpeta 1:
 
 ```{r}
-carpeta <- 'data/0519xxxiii14/06_02_2023/14.20.34/'
+carpeta <- 'data/0519xxxiii14/06_02_2023/'
 ```
 
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroAnalogico.dat')
+fich <- paste0(carpeta, '14.20.34/cabecera_FicheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 cab_fich_anal <- readBin(read.filename, what = integer(),  n = 7, size = 1, signed = TRUE)
 cab_fich_anal
@@ -99,7 +99,7 @@ frecuencia <- cab_fich_anal2[3]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroDigital.dat')
+fich <- paste0(carpeta, '14.20.34/cabecera_FicheroDigital.dat')
 read.filename <- file(fich,'rb')
 cab_fich_dig <- readBin(read.filename, what = integer(),  n = 8, size = 1)
 cab_fich_dig
@@ -114,7 +114,7 @@ resolucion <- cab_fich_dig[7]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroDigital.dat')
+fich <- paste0(carpeta, '14.20.34/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -124,7 +124,7 @@ fich_dig
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroAnalogico.dat')
+fich <- paste0(carpeta, '14.20.34/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -137,12 +137,12 @@ fich_anal
 Carpeta 2 (1):
 
 ```{r}
-carpeta <- 'data/0795xalvii8a7/27_09_2022/10.11.00/'
+carpeta <- 'data/0795xalvii8a7/27_09_2022/'
 ```
 
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroAnalogico.dat')
+fich <- paste0(carpeta, '10.11.00/cabecera_FicheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 cab_fich_anal <- readBin(read.filename, what = integer(),  n = 7, size = 1, signed = TRUE)
 cab_fich_anal
@@ -165,7 +165,7 @@ frecuencia <- cab_fich_anal2[3]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroDigital.dat')
+fich <- paste0(carpeta, '10.11.00/cabecera_FicheroDigital.dat')
 read.filename <- file(fich,'rb')
 cab_fich_dig <- readBin(read.filename, what = integer(),  n = 8, size = 1)
 cab_fich_dig
@@ -180,7 +180,7 @@ resolucion <- cab_fich_dig[7]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroDigital.dat')
+fich <- paste0(carpeta, '10.11.00/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -190,7 +190,7 @@ fich_dig
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroAnalogico.dat')
+fich <- paste0(carpeta, '10.11.00/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -203,12 +203,12 @@ fich_anal
 Carpeta 2 (2):
 
 ```{r}
-carpeta <- 'data/0795xalvii8a7/27_09_2022/10.11.12/'
+carpeta <- 'data/0795xalvii8a7/27_09_2022/'
 ```
 
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroAnalogico.dat')
+fich <- paste0(carpeta, '10.11.12/cabecera_FicheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 cab_fich_anal <- readBin(read.filename, what = integer(),  n = 7, size = 1, signed = TRUE)
 cab_fich_anal
@@ -231,7 +231,7 @@ frecuencia <- cab_fich_anal2[3]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'cabecera_FicheroDigital.dat')
+fich <- paste0(carpeta, '10.11.12/cabecera_FicheroDigital.dat')
 read.filename <- file(fich,'rb')
 cab_fich_dig <- readBin(read.filename, what = integer(),  n = 8, size = 1)
 cab_fich_dig
@@ -246,7 +246,7 @@ resolucion <- cab_fich_dig[7]
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroDigital.dat')
+fich <- paste0(carpeta, '10.11.12/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -256,7 +256,7 @@ fich_dig
 ```
 
 ```{r}
-fich <- paste0(carpeta, 'ficheroAnalogico.dat')
+fich <- paste0(carpeta, '10.11.12/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
@@ -268,7 +268,7 @@ fich_anal
 Carpeta 4 (1):
 
 ```{r}
-carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.31.15'
+carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.31.15/'
 ```
 
 
@@ -333,7 +333,7 @@ fich_anal
 Carpeta 4 (2):
 
 ```{r}
-carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.49.57'
+carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.49.57/'
 ```
 
 
