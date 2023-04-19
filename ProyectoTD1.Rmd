@@ -32,5 +32,20 @@ frecuencia <- cab_fich_anal2[3]
 
 ```
 
+```{r}
+fich <- paste0(carpeta, 'cabecera_FicheroDigital.dat')
+read.filename <- file(fich,'rb')
+cab_fich_dig <- readBin(read.filename, what = integer(),  n = 8, size = 1)
+cab_fich_dig
+
+dia <- cab_fich_dig[1]
+mes <- cab_fich_dig[2]
+anyo <- cab_fich_dig[3]
+hora <- cab_fich_dig[4]
+min <- cab_fich_dig[5]
+seg <- cab_fich_dig[6]
+resolucion <- cab_fich_dig[7]
+```
+
 
 
