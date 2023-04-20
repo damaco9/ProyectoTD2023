@@ -4,6 +4,11 @@ author: "Daniel Macho Collado"
 date: "2023-04-19"
 output: html_document
 ---
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
 Carpeta 3:
 ```{r}
 carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/'
@@ -56,18 +61,37 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
-for (i in 1:length(fich_dig)) {
-  HR1 <- fich_dig[1]
-  HR2 <- fich_dig[2]
-  MHR <- fich_dig[3]
-  TOCO <- fich_dig[4]
-  SPO2 <- fich_dig[5]
-  VCP <- fich_dig[6]
-  Ps <- fich_dig[7]
-  Pd <- fich_dig[8]
-  Pm <- fich_dig[9]
+
+
+HR1 <- c()
+HR2 <- c()
+MHR <- c()
+TOCO <- c()
+SPO2 <- c()
+VCP <- c()
+Ps <- c()
+Pd <- c()
+Pm <- c()
+
+for (i in seq(1, length(fich_dig), by = 9)) {
+  HR1 <- c(HR1, fich_dig[i])
+  HR2 <- c(HR2, fich_dig[i + 1])
+  MHR <- c(MHR, fich_dig[i + 2])
+  TOCO <- c(TOCO, fich_dig[i + 3])
+  SPO2 <- c(SPO2, fich_dig[i + 4])
+  VCP <- c(VCP, fich_dig[i + 5])
+  Ps <- c(Ps, fich_dig[i + 6])
+  Pd <- c(Pd, fich_dig[i + 7])
+  Pm <- c(Pm, fich_dig[i + 8])
 }
+
+datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
 ```
+
+```{r}
+ggplot(data = datos_etiquetados, aes(x = resolucion)) + geom_line(aes(y = HR1))
+```
+
 
 
 ```{r}
@@ -135,17 +159,30 @@ fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
 
-for (i in 1:length(fich_dig)) {
-  HR1 <- fich_dig[1]
-  HR2 <- fich_dig[2]
-  MHR <- fich_dig[3]
-  TOCO <- fich_dig[4]
-  SPO2 <- fich_dig[5]
-  VCP <- fich_dig[6]
-  Ps <- fich_dig[7]
-  Pd <- fich_dig[8]
-  Pm <- fich_dig[9]
+
+HR1 <- c()
+HR2 <- c()
+MHR <- c()
+TOCO <- c()
+SPO2 <- c()
+VCP <- c()
+Ps <- c()
+Pd <- c()
+Pm <- c()
+
+for (i in seq(1, length(fich_dig), by = 9)) {
+  HR1 <- c(HR1, fich_dig[i])
+  HR2 <- c(HR2, fich_dig[i + 1])
+  MHR <- c(MHR, fich_dig[i + 2])
+  TOCO <- c(TOCO, fich_dig[i + 3])
+  SPO2 <- c(SPO2, fich_dig[i + 4])
+  VCP <- c(VCP, fich_dig[i + 5])
+  Ps <- c(Ps, fich_dig[i + 6])
+  Pd <- c(Pd, fich_dig[i + 7])
+  Pm <- c(Pm, fich_dig[i + 8])
 }
+
+datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
 
 ```
 
@@ -214,17 +251,30 @@ fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
 
-for (i in 1:length(fich_dig)) {
-  HR1 <- fich_dig[1]
-  HR2 <- fich_dig[2]
-  MHR <- fich_dig[3]
-  TOCO <- fich_dig[4]
-  SPO2 <- fich_dig[5]
-  VCP <- fich_dig[6]
-  Ps <- fich_dig[7]
-  Pd <- fich_dig[8]
-  Pm <- fich_dig[9]
+
+HR1 <- c()
+HR2 <- c()
+MHR <- c()
+TOCO <- c()
+SPO2 <- c()
+VCP <- c()
+Ps <- c()
+Pd <- c()
+Pm <- c()
+
+for (i in seq(1, length(fich_dig), by = 9)) {
+  HR1 <- c(HR1, fich_dig[i])
+  HR2 <- c(HR2, fich_dig[i + 1])
+  MHR <- c(MHR, fich_dig[i + 2])
+  TOCO <- c(TOCO, fich_dig[i + 3])
+  SPO2 <- c(SPO2, fich_dig[i + 4])
+  VCP <- c(VCP, fich_dig[i + 5])
+  Ps <- c(Ps, fich_dig[i + 6])
+  Pd <- c(Pd, fich_dig[i + 7])
+  Pm <- c(Pm, fich_dig[i + 8])
 }
+
+datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
 
 ```
 
@@ -292,17 +342,30 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
-for (i in 1:length(fich_dig)) {
-  HR1 <- fich_dig[1]
-  HR2 <- fich_dig[2]
-  MHR <- fich_dig[3]
-  TOCO <- fich_dig[4]
-  SPO2 <- fich_dig[5]
-  VCP <- fich_dig[6]
-  Ps <- fich_dig[7]
-  Pd <- fich_dig[8]
-  Pm <- fich_dig[9]
+
+HR1 <- c()
+HR2 <- c()
+MHR <- c()
+TOCO <- c()
+SPO2 <- c()
+VCP <- c()
+Ps <- c()
+Pd <- c()
+Pm <- c()
+
+for (i in seq(1, length(fich_dig), by = 9)) {
+  HR1 <- c(HR1, fich_dig[i])
+  HR2 <- c(HR2, fich_dig[i + 1])
+  MHR <- c(MHR, fich_dig[i + 2])
+  TOCO <- c(TOCO, fich_dig[i + 3])
+  SPO2 <- c(SPO2, fich_dig[i + 4])
+  VCP <- c(VCP, fich_dig[i + 5])
+  Ps <- c(Ps, fich_dig[i + 6])
+  Pd <- c(Pd, fich_dig[i + 7])
+  Pm <- c(Pm, fich_dig[i + 8])
 }
+
+datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
 
 ```
 
@@ -369,17 +432,30 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
-for (i in 1:length(fich_dig)) {
-  HR1 <- fich_dig[1]
-  HR2 <- fich_dig[2]
-  MHR <- fich_dig[3]
-  TOCO <- fich_dig[4]
-  SPO2 <- fich_dig[5]
-  VCP <- fich_dig[6]
-  Ps <- fich_dig[7]
-  Pd <- fich_dig[8]
-  Pm <- fich_dig[9]
+
+HR1 <- c()
+HR2 <- c()
+MHR <- c()
+TOCO <- c()
+SPO2 <- c()
+VCP <- c()
+Ps <- c()
+Pd <- c()
+Pm <- c()
+
+for (i in seq(1, length(fich_dig), by = 9)) {
+  HR1 <- c(HR1, fich_dig[i])
+  HR2 <- c(HR2, fich_dig[i + 1])
+  MHR <- c(MHR, fich_dig[i + 2])
+  TOCO <- c(TOCO, fich_dig[i + 3])
+  SPO2 <- c(SPO2, fich_dig[i + 4])
+  VCP <- c(VCP, fich_dig[i + 5])
+  Ps <- c(Ps, fich_dig[i + 6])
+  Pd <- c(Pd, fich_dig[i + 7])
+  Pm <- c(Pm, fich_dig[i + 8])
 }
+
+datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
 
 ```
 
@@ -446,17 +522,30 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
-for (i in 1:length(fich_dig)) {
-  HR1 <- fich_dig[1]
-  HR2 <- fich_dig[2]
-  MHR <- fich_dig[3]
-  TOCO <- fich_dig[4]
-  SPO2 <- fich_dig[5]
-  VCP <- fich_dig[6]
-  Ps <- fich_dig[7]
-  Pd <- fich_dig[8]
-  Pm <- fich_dig[9]
+
+HR1 <- c()
+HR2 <- c()
+MHR <- c()
+TOCO <- c()
+SPO2 <- c()
+VCP <- c()
+Ps <- c()
+Pd <- c()
+Pm <- c()
+
+for (i in seq(1, length(fich_dig), by = 9)) {
+  HR1 <- c(HR1, fich_dig[i])
+  HR2 <- c(HR2, fich_dig[i + 1])
+  MHR <- c(MHR, fich_dig[i + 2])
+  TOCO <- c(TOCO, fich_dig[i + 3])
+  SPO2 <- c(SPO2, fich_dig[i + 4])
+  VCP <- c(VCP, fich_dig[i + 5])
+  Ps <- c(Ps, fich_dig[i + 6])
+  Pd <- c(Pd, fich_dig[i + 7])
+  Pm <- c(Pm, fich_dig[i + 8])
 }
+
+datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
 
 ```
 
