@@ -56,7 +56,19 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
+for (i in 1:length(fich_dig)) {
+  HR1 <- fich_dig[1]
+  HR2 <- fich_dig[2]
+  MHR <- fich_dig[3]
+  TOCO <- fich_dig[4]
+  SPO2 <- fich_dig[5]
+  VCP <- fich_dig[6]
+  Ps <- fich_dig[7]
+  Pd <- fich_dig[8]
+  Pm <- fich_dig[9]
+}
 ```
+
 
 ```{r}
 fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/ficheroAnalogico.dat')
@@ -66,6 +78,7 @@ tamanyo <- file.info(fich)$size
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
 ```
+
 
 
 Carpeta 1:
@@ -120,6 +133,19 @@ tamanyo <- file.info(fich)$size
 
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
+
+
+for (i in 1:length(fich_dig)) {
+  HR1 <- fich_dig[1]
+  HR2 <- fich_dig[2]
+  MHR <- fich_dig[3]
+  TOCO <- fich_dig[4]
+  SPO2 <- fich_dig[5]
+  VCP <- fich_dig[6]
+  Ps <- fich_dig[7]
+  Pd <- fich_dig[8]
+  Pm <- fich_dig[9]
+}
 
 ```
 
@@ -187,6 +213,19 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
+
+for (i in 1:length(fich_dig)) {
+  HR1 <- fich_dig[1]
+  HR2 <- fich_dig[2]
+  MHR <- fich_dig[3]
+  TOCO <- fich_dig[4]
+  SPO2 <- fich_dig[5]
+  VCP <- fich_dig[6]
+  Ps <- fich_dig[7]
+  Pd <- fich_dig[8]
+  Pm <- fich_dig[9]
+}
+
 ```
 
 ```{r}
@@ -253,6 +292,18 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
+for (i in 1:length(fich_dig)) {
+  HR1 <- fich_dig[1]
+  HR2 <- fich_dig[2]
+  MHR <- fich_dig[3]
+  TOCO <- fich_dig[4]
+  SPO2 <- fich_dig[5]
+  VCP <- fich_dig[6]
+  Ps <- fich_dig[7]
+  Pd <- fich_dig[8]
+  Pm <- fich_dig[9]
+}
+
 ```
 
 ```{r}
@@ -317,6 +368,18 @@ tamanyo <- file.info(fich)$size
 
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
+
+for (i in 1:length(fich_dig)) {
+  HR1 <- fich_dig[1]
+  HR2 <- fich_dig[2]
+  MHR <- fich_dig[3]
+  TOCO <- fich_dig[4]
+  SPO2 <- fich_dig[5]
+  VCP <- fich_dig[6]
+  Ps <- fich_dig[7]
+  Pd <- fich_dig[8]
+  Pm <- fich_dig[9]
+}
 
 ```
 
@@ -383,6 +446,18 @@ tamanyo <- file.info(fich)$size
 fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
 fich_dig
 
+for (i in 1:length(fich_dig)) {
+  HR1 <- fich_dig[1]
+  HR2 <- fich_dig[2]
+  MHR <- fich_dig[3]
+  TOCO <- fich_dig[4]
+  SPO2 <- fich_dig[5]
+  VCP <- fich_dig[6]
+  Ps <- fich_dig[7]
+  Pd <- fich_dig[8]
+  Pm <- fich_dig[9]
+}
+
 ```
 
 ```{r}
@@ -393,3 +468,5 @@ tamanyo <- file.info(fich)$size
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
 ```
+
+
