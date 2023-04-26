@@ -81,7 +81,9 @@ tiempo <- c()
 
 suma <- 0
 
-for (i in 1 : 2604) {
+tamanyo2 <- file.info(fich)$size/9
+
+for (i in 1 : tamanyo2) {
 
   suma <- suma + 0.25
   tiempo[i] <- suma
@@ -114,12 +116,11 @@ grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres))
   theme_bw() +
   facet_wrap(.~nombres) + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
 
 grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
 grafico
-
-summary(datos_fich_dig)
 ```
 
 
@@ -136,7 +137,9 @@ tiempo <- c()
 
 suma <- 0
 
-for (i in 1 : 702000) {
+tamanyo2 <- file.info(fich)$size/2
+
+for (i in 1 : tamanyo2) {
 
   suma <- suma + 0.25
   tiempo[i] <- suma
@@ -146,12 +149,12 @@ datos_fich_anal <- data.frame(fich_anal, tiempo)
 
 #grafico2 <- plot(fich_anal[1:10000], type = 'l')
 
-grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal), color = 'azul') + 
-  geom_line() +
+grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal)) + 
+  geom_line(color = 'blue') +
   labs(x = 'Tiempo', y = 'Valor') +
   theme_bw() +
   scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
-  scale_x_continuous(limits = c(0, 800), breaks = seq(0, 800, 2.5))
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 2.5))
 grafico1
 
 grafico <- ggplotly(grafico1)%>%
@@ -211,9 +214,8 @@ fich <- paste0(carpeta, '14.20.34/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
-fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
+fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1,signed = FALSE)
 fich_dig
-
 
 
 HR1 <- c()
@@ -225,6 +227,18 @@ VCP <- c()
 Ps <- c()
 Pd <- c()
 Pm <- c()
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/9
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
 
 for (i in seq(1, length(fich_dig), by = 9)) {
   HR1 <- c(HR1, fich_dig[i])
@@ -238,12 +252,25 @@ for (i in seq(1, length(fich_dig), by = 9)) {
   Pm <- c(Pm, fich_dig[i + 8])
 }
 
-datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
+datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 
 ```
 
 ```{r}
-plot(HR1,type = 'l')
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres) + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
 ```
 
 
@@ -254,6 +281,34 @@ tamanyo <- file.info(fich)$size
 
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
+
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/2
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
+datos_fich_anal <- data.frame(fich_anal, tiempo)
+
+#grafico2 <- plot(fich_anal[1:10000], type = 'l')
+
+grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal)) + 
+  geom_line(color = 'blue') +
+  labs(x = 'Tiempo', y = 'Valor') +
+  theme_bw() +
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 2.5))
+grafico1
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
 ```
 
 
@@ -308,9 +363,8 @@ fich <- paste0(carpeta, '10.11.00/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
-fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
+fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1,signed = FALSE)
 fich_dig
-
 
 
 HR1 <- c()
@@ -322,6 +376,18 @@ VCP <- c()
 Ps <- c()
 Pd <- c()
 Pm <- c()
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/9
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
 
 for (i in seq(1, length(fich_dig), by = 9)) {
   HR1 <- c(HR1, fich_dig[i])
@@ -335,9 +401,27 @@ for (i in seq(1, length(fich_dig), by = 9)) {
   Pm <- c(Pm, fich_dig[i + 8])
 }
 
-datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
+datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 
 ```
+
+```{r}
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres) + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
+```
+
 
 ```{r}
 fich <- paste0(carpeta, '10.11.00/ficheroAnalogico.dat')
@@ -346,6 +430,34 @@ tamanyo <- file.info(fich)$size
 
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
+
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/2
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
+datos_fich_anal <- data.frame(fich_anal, tiempo)
+
+#grafico2 <- plot(fich_anal[1:10000], type = 'l')
+
+grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal)) + 
+  geom_line(color = 'blue') +
+  labs(x = 'Tiempo', y = 'Valor') +
+  theme_bw() +
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 2.5))
+grafico1
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
 ```
 
 
@@ -400,7 +512,7 @@ fich <- paste0(carpeta, '10.11.12/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
-fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
+fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1,signed = FALSE)
 fich_dig
 
 
@@ -413,6 +525,18 @@ VCP <- c()
 Ps <- c()
 Pd <- c()
 Pm <- c()
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/9
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
 
 for (i in seq(1, length(fich_dig), by = 9)) {
   HR1 <- c(HR1, fich_dig[i])
@@ -426,9 +550,27 @@ for (i in seq(1, length(fich_dig), by = 9)) {
   Pm <- c(Pm, fich_dig[i + 8])
 }
 
-datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
+datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 
 ```
+
+```{r}
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres) + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
+```
+
 
 ```{r}
 fich <- paste0(carpeta, '10.11.12/ficheroAnalogico.dat')
@@ -437,6 +579,34 @@ tamanyo <- file.info(fich)$size
 
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
+
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/2
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
+datos_fich_anal <- data.frame(fich_anal, tiempo)
+
+#grafico2 <- plot(fich_anal[1:10000], type = 'l')
+
+grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal)) + 
+  geom_line(color = 'blue') +
+  labs(x = 'Tiempo', y = 'Valor') +
+  theme_bw() +
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 2.5))
+grafico1
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
 ```
 
 
@@ -490,7 +660,7 @@ fich <- paste0(carpeta, 'ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
-fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
+fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1,signed = FALSE)
 fich_dig
 
 
@@ -503,6 +673,18 @@ VCP <- c()
 Ps <- c()
 Pd <- c()
 Pm <- c()
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/9
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
 
 for (i in seq(1, length(fich_dig), by = 9)) {
   HR1 <- c(HR1, fich_dig[i])
@@ -516,9 +698,27 @@ for (i in seq(1, length(fich_dig), by = 9)) {
   Pm <- c(Pm, fich_dig[i + 8])
 }
 
-datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
+datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 
 ```
+
+```{r}
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres) + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
+```
+
 
 ```{r}
 fich <- paste0(carpeta, 'ficheroAnalogico.dat')
@@ -527,6 +727,34 @@ tamanyo <- file.info(fich)$size
 
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
+
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/2
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
+datos_fich_anal <- data.frame(fich_anal, tiempo)
+
+#grafico2 <- plot(fich_anal[1:10000], type = 'l')
+
+grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal)) + 
+  geom_line(color = 'blue') +
+  labs(x = 'Tiempo', y = 'Valor') +
+  theme_bw() +
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 2.5))
+grafico1
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
 ```
 
 
@@ -580,7 +808,7 @@ fich <- paste0(carpeta, 'ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
-fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
+fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1,signed = FALSE)
 fich_dig
 
 
@@ -593,6 +821,18 @@ VCP <- c()
 Ps <- c()
 Pd <- c()
 Pm <- c()
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/9
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
 
 for (i in seq(1, length(fich_dig), by = 9)) {
   HR1 <- c(HR1, fich_dig[i])
@@ -606,9 +846,26 @@ for (i in seq(1, length(fich_dig), by = 9)) {
   Pm <- c(Pm, fich_dig[i + 8])
 }
 
-datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
-
+datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 ```
+
+```{r}
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres) + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
+```
+
 
 ```{r}
 fich <- paste0(carpeta, 'ficheroAnalogico.dat')
@@ -617,6 +874,34 @@ tamanyo <- file.info(fich)$size
 
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
+
+tiempo <- c()
+
+suma <- 0
+
+tamanyo2 <- file.info(fich)$size/2
+
+for (i in 1 : tamanyo2) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
+datos_fich_anal <- data.frame(fich_anal, tiempo)
+
+#grafico2 <- plot(fich_anal[1:10000], type = 'l')
+
+grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal)) + 
+  geom_line(color = 'blue') +
+  labs(x = 'Tiempo', y = 'Valor') +
+  theme_bw() +
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 2.5))
+grafico1
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
 ```
 
 
