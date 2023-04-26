@@ -7,6 +7,8 @@ output: html_document
 ```{r}
 library(dplyr)
 library(ggplot2)
+library(tidyr)
+library(plotly)
 ```
 
 Carpeta 3:
@@ -18,7 +20,7 @@ carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/'
 ```{r}
 fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/cabecera_FicheroAnalogico.dat')
 read.filename <- file(fich,'rb')
-cab_fich_anal <- readBin(read.filename, what = integer(),  n = 7, size = 1, signed = TRUE)
+cab_fich_anal <- readBin(read.filename, what = integer(),  n = 7, size = 1, signed = FALSE)
 cab_fich_anal
 
 dia <- cab_fich_anal[1]
@@ -36,12 +38,13 @@ voltaje_max <- cab_fich_anal2[1]
 voltaje_min <- cab_fich_anal2[2]
 frecuencia <- cab_fich_anal2[3]
 
+datos_cabecera_anal <- data.frame(dia, mes ,anyo, hora, min, seg, resolucion, voltaje_max, voltaje_min, frecuencia)
 ```
 
 ```{r}
 fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/cabecera_FicheroDigital.dat')
 read.filename <- file(fich,'rb')
-cab_fich_dig <- readBin(read.filename, what = integer(),  n = 8, size = 1)
+cab_fich_dig <- readBin(read.filename, what = integer(),  n = 8, size = 1, signed = FALSE)
 cab_fich_dig
 
 dia <- cab_fich_dig[1]
@@ -51,6 +54,9 @@ hora <- cab_fich_dig[4]
 min <- cab_fich_dig[5]
 seg <- cab_fich_dig[6]
 resolucion <- cab_fich_dig[7]
+canales <- cab_fich_dig[8]
+
+datos_cabecera_dig <- data.frame(dia, mes ,anyo, hora, min, seg, resolucion, canales)
 ```
 
 ```{r}
@@ -58,9 +64,8 @@ fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/ficheroDigital.dat')
 read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
-fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1)
+fich_dig <- readBin(read.filename, what = integer(),  n = tamanyo, size = 1,signed = FALSE)
 fich_dig
-
 
 
 HR1 <- c()
@@ -72,6 +77,16 @@ VCP <- c()
 Ps <- c()
 Pd <- c()
 Pm <- c()
+tiempo <- c()
+
+suma <- 0
+
+for (i in 1 : 2604) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
 
 for (i in seq(1, length(fich_dig), by = 9)) {
   HR1 <- c(HR1, fich_dig[i])
@@ -85,11 +100,26 @@ for (i in seq(1, length(fich_dig), by = 9)) {
   Pm <- c(Pm, fich_dig[i + 8])
 }
 
-datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
+datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 ```
 
 ```{r}
-ggplot(data = datos_etiquetados, aes(x = resolucion)) + geom_line(aes(y = HR1))
+#plot(MHR, type = 'l')
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres) + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
+
+summary(datos_fich_dig)
 ```
 
 
@@ -101,6 +131,32 @@ tamanyo <- file.info(fich)$size
 
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
 fich_anal
+
+tiempo <- c()
+
+suma <- 0
+
+for (i in 1 : 702000) {
+
+  suma <- suma + 0.25
+  tiempo[i] <- suma
+}
+
+datos_fich_anal <- data.frame(fich_anal, tiempo)
+
+#grafico2 <- plot(fich_anal[1:10000], type = 'l')
+
+grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal), color = 'azul') + 
+  geom_line() +
+  labs(x = 'Tiempo', y = 'Valor') +
+  theme_bw() +
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
+  scale_x_continuous(limits = c(0, 800), breaks = seq(0, 800, 2.5))
+grafico1
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
 ```
 
 
@@ -185,6 +241,11 @@ for (i in seq(1, length(fich_dig), by = 9)) {
 datos_etiquetados <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm)
 
 ```
+
+```{r}
+plot(HR1,type = 'l')
+```
+
 
 ```{r}
 fich <- paste0(carpeta, '14.20.34/ficheroAnalogico.dat')
