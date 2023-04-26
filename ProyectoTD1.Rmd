@@ -1,6 +1,6 @@
 ---
 title: "ProyectoTD1"
-author: "Daniel Macho Collado"
+author: "Daniel Macho Collado, Paula Rodríguez Lanzas"
 date: "2023-04-19"
 output: html_document
 ---
