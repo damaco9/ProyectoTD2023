@@ -4,6 +4,7 @@ author: "Daniel Macho Collado, Paula Rodriguez Lanzas, Lucía López López"
 date: "2023-04-19"
 output: html_document
 ---
+
 ```{r}
 library(dplyr)
 library(ggplot2)
@@ -11,11 +12,11 @@ library(tidyr)
 library(plotly)
 ```
 
-Carpeta 3:
+## Carpeta 3:
+
 ```{r}
 carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/'
 ```
-
 
 ```{r}
 fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/cabecera_FicheroAnalogico.dat')
@@ -125,8 +126,6 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
-
 ```{r}
 fich <- paste0(carpeta, '14.42.29_III_ECGyEXTyRESTO/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -164,14 +163,11 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
-
-Carpeta 1:
+## Carpeta 1:
 
 ```{r}
 carpeta <- 'data/0519xxxiii14/06_02_2023/'
 ```
-
 
 ```{r}
 fich <- paste0(carpeta, '14.20.34/cabecera_FicheroAnalogico.dat')
@@ -277,7 +273,6 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
 ```{r}
 fich <- paste0(carpeta, '14.20.34/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -315,14 +310,11 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
-
-Carpeta 2 (1):
+## Carpeta 2 (1):
 
 ```{r}
 carpeta <- 'data/0795xalvii8a7/27_09_2022/'
 ```
-
 
 ```{r}
 fich <- paste0(carpeta, '10.11.00/cabecera_FicheroAnalogico.dat')
@@ -428,7 +420,6 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
 ```{r}
 fich <- paste0(carpeta, '10.11.00/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -466,14 +457,11 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
-
-Carpeta 2 (2):
+## Carpeta 2 (2):
 
 ```{r}
 carpeta <- 'data/0795xalvii8a7/27_09_2022/'
 ```
-
 
 ```{r}
 fich <- paste0(carpeta, '10.11.12/cabecera_FicheroAnalogico.dat')
@@ -579,7 +567,6 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
 ```{r}
 fich <- paste0(carpeta, '10.11.12/ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -617,14 +604,12 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
-Carpeta 4 (1):
+## Carpeta 4 (1):
 
 ```{r}
 carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.31.15/'
 ```
 
-
 ```{r}
 fich <- paste0(carpeta, 'cabecera_FicheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -729,7 +714,6 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
 ```{r}
 fich <- paste0(carpeta, 'ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -767,14 +751,12 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
-Carpeta 4 (2):
+## Carpeta 4 (2):
 
 ```{r}
 carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.49.57/'
 ```
 
-
 ```{r}
 fich <- paste0(carpeta, 'cabecera_FicheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -878,7 +860,6 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-
 ```{r}
 fich <- paste0(carpeta, 'ficheroAnalogico.dat')
 read.filename <- file(fich,'rb')
@@ -916,4 +897,16 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
+## Preguntas:
 
+\- Cuál es el valor con más latidos por minuto? Y el mínimo?
+
+\- Cuál es el momento del día donde normalmente se está más tranquilo, los latidos por minutos? Y el que más?
+
+\- Cuál es la frecuencia cardíaca basal del feto?
+
+\- Cómo varían las diferentes variables en el tiempo?
+
+\- Qué patrones o características destacables se pueden observar al comparar las diferentes variables entre si?
+
+\- Encontramos algún valor anómalo (outlier) en nuestros datos?
