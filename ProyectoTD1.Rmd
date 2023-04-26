@@ -110,11 +110,13 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
-  facet_wrap(.~nombres) + 
+  facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
   
 
@@ -260,11 +262,13 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
-  facet_wrap(.~nombres) + 
+  facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
   
 
@@ -409,11 +413,13 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
-  facet_wrap(.~nombres) + 
+  facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
   
 
@@ -558,11 +564,13 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
-  facet_wrap(.~nombres) + 
+  facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
   
 
@@ -706,11 +714,13 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
-  facet_wrap(.~nombres) + 
+  facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
   
 
@@ -853,11 +863,13 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
-  facet_wrap(.~nombres) + 
+  facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
   
 
