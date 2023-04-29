@@ -1,6 +1,6 @@
 ---
 title: "ProyectoTD1"
-author: "Daniel Macho Collado, Paula Rodriguez Lanzas, Lucía López López"
+author: "Daniel Macho Collado, Paula Rodriguez Lanzas, Lucía López López, Gonzalo Sánchez Muñoz"
 date: "2023-04-19"
 output: html_document
 ---
