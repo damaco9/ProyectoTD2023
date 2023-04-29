@@ -110,7 +110,6 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 ## Gráfico Fichero Digital:
 
 ```{r}
-#plot(MHR, type = 'l')
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
