@@ -129,7 +129,7 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
-## Gráfico Fichero Analógico:
+## Fichero Analógico:
 
 ```{r}
 fich <- paste0(carpeta, 'ficheroAnalogico.dat')
@@ -143,23 +143,27 @@ tiempo <- c()
 suma <- 0
 
 tamanyo2 <- file.info(fich)$size/2
+Freq_muestreo <- 1000
 
 for (i in 1 : tamanyo2) {
 
-  suma <- suma + 0.001
+  suma <- suma + 1/Freq_muestreo
   tiempo[i] <- suma
 }
 
-datos_fich_anal <- data.frame(fich_anal, tiempo)
+datos_fich_anal2 <- data.frame(fich_anal, tiempo)
+```
 
-#grafico2 <- plot(fich_anal[650000:700000], type = 'l')
+## Gráfico Fichero Analógico:
 
-grafico1 <- ggplot(datos_fich_anal, aes(x = tiempo, y = fich_anal)) + 
+```{r}
+datos_anal_tiemp <- subset(datos_fich_anal2, tiempo > max(tiempo)-10)
+
+grafico1 <- ggplot(datos_anal_tiemp, aes(x = tiempo, y = fich_anal)) + 
   geom_line(color = 'blue') +
-  labs(x = 'Tiempo', y = 'Valor') +
+  labs(tittle = 'Fichero Analógico',x = 'Tiempo', y = 'Valor') +
   theme_bw() +
-  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250)) +
-  scale_x_continuous(limits = c(690, 700), breaks = seq(690, 700, 2.5))
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250))
 
 grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
