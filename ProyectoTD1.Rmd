@@ -117,7 +117,7 @@ datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
 
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
-  labs(x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  labs(title = 'Fichero Digital', x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
   facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
@@ -128,6 +128,13 @@ grafico <- ggplotly(grafico1)%>%
 grafico
 ```
 
+## Comprobación outliers Fichero Digital:
+
+```{r}
+apply(datos_fich_dig,2,function(x){any(is.na(x))})
+apply(datos_fich_dig,2,function(x){any(is.null(x))})
+apply(datos_fich_dig,2,function(x){any(is.infinite(x))})
+```
 ## Fichero Analógico:
 
 ```{r}
@@ -160,7 +167,7 @@ datos_anal_tiemp <- subset(datos_fich_anal2, tiempo > max(tiempo)-10)
 
 grafico1 <- ggplot(datos_anal_tiemp, aes(x = tiempo, y = fich_anal)) + 
   geom_line(color = 'blue') +
-  labs(tittle = 'Fichero Analógico',x = 'Tiempo', y = 'Valor') +
+  labs(title = 'Fichero Analógico', x = 'Tiempo', y = 'Valor') +
   theme_bw() +
   scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250))
 
@@ -168,6 +175,23 @@ grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
 grafico
 ```
+## Comprobación outliers Fichero Analógico:
+
+```{r}
+any(is.na(datos_anal_tiemp))
+any(is.null(datos_anal_tiemp))
+apply(datos_anal_tiemp,2,function(x){any(is.infinite(x))})
+```
+Como podemos comprobar, no existen datoa anomalos en el Fichero Analógico.
+
+## Analisis Exploratorio:
+
+```{r}
+summary(datos_fich_anal2)
+summary(datos_fich_dig)
+```
+Podemos observar la presencia de diferentes otliers en el fichero digital:
+\- Podemos observar valores mínimos en 0, lo cual no puede ser debido a que son medidas de los latidos, tanto de los fetos como de la madre. Posiblemente sean errores a la hora de medir los datos.
 
 ## Preguntas:
 
