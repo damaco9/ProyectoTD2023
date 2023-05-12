@@ -135,6 +135,41 @@ apply(datos_fich_dig,2,function(x){any(is.na(x))})
 apply(datos_fich_dig,2,function(x){any(is.null(x))})
 apply(datos_fich_dig,2,function(x){any(is.infinite(x))})
 ```
+## Quitamos outliers Fichero Digital:
+
+```{r}
+outHR1 = which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR1) + 3 * sd(datos_fich_dig$HR1) | 
+        datos_fich_dig$HR1 < mean(datos_fich_dig$HR1) - 3 * sd(datos_fich_dig$HR1))
+for (i in outHR1){
+  datos_fich_dig$HR1[i] = mean(datos_fich_dig$HR1[i-1], datos_fich_dig$HR1[i+1])
+}
+
+outHR2 = which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR2) + 2.5 * sd(datos_fich_dig$HR2) | 
+        datos_fich_dig$HR2 < mean(datos_fich_dig$HR2) - 2.5 * sd(datos_fich_dig$HR2))
+for (i in outHR2){
+  datos_fich_dig$HR2[i] = mean(datos_fich_dig$HR2[i-1], datos_fich_dig$HR2[i+1])
+}
+
+outMHR = which(datos_fich_dig$MHR == 16)
+for (i in outMHR){
+  datos_fich_dig$MHR[i] = mean(datos_fich_dig$MHR[i-1], datos_fich_dig$MHR[i+1])
+}
+
+
+outTOCO = c()
+for (l in 2:(length(datos_fich_dig$TOCO) - 1)){
+  dat = datos_fich_dig$TOCO[l]
+  ant = datos_fich_dig$TOCO[l - 1]
+  pos = datos_fich_dig$TOCO[l + 1]
+  if ((dat < (ant - 10)) | (dat > (ant + 10)) | (dat < (pos - 10)) | (dat > (pos + 10))){
+    outTOCO <- c(outTOCO, l)
+  }
+}
+for (i in outTOCO){
+  datos_fich_dig$TOCO[i] = mean(datos_fich_dig$TOCO[i-1], datos_fich_dig$TOCO[i+1])
+}
+```
+
 ## Fichero Analógico:
 
 ```{r}
