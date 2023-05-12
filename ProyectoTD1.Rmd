@@ -15,7 +15,7 @@ library(plotly)
 ## Carpeta:
 
 ```{r}
-carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
+carpeta <- 'data/0795xalvii8a7/27_09_2022/10.11.12/'
 ```
 
 ## Cabecera Fichero Analógico:
@@ -34,6 +34,7 @@ seg <- cab_fich_anal[6]
 resolucion <- cab_fich_anal[7]
 
 cab_fich_anal2 <- readBin(read.filename, what = integer(), n = 3, size = 2, signed = TRUE)
+close(read.filename)
 
 voltaje_max <- cab_fich_anal2[1]
 voltaje_min <- cab_fich_anal2[2]
@@ -48,6 +49,7 @@ datos_cabecera_anal <- data.frame(dia, mes ,anyo, hora, min, seg, resolucion, vo
 fich <- paste0(carpeta, 'cabecera_FicheroDigital.dat')
 read.filename <- file(fich,'rb')
 cab_fich_dig <- readBin(read.filename, what = integer(), n = 8, size = 1, signed = FALSE)
+close(read.filename)
 
 dia <- cab_fich_dig[1]
 mes <- cab_fich_dig[2]
@@ -69,6 +71,7 @@ read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
 fich_dig <- readBin(read.filename, what = integer(), n = tamanyo, size = 1,signed = FALSE)
+close(read.filename)
 
 HR1 <- c()
 HR2 <- c()
@@ -138,7 +141,7 @@ apply(datos_fich_dig,2,function(x){any(is.infinite(x))})
 ## Quitamos outliers Fichero Digital:
 
 ```{r}
-outHR1 = which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR1) + 3 * sd(datos_fich_dig$HR1) | 
+outHR1 = which(datos_fich_dig$HR1 > mean(datos_fich_dig$HR1) + 3 * sd(datos_fich_dig$HR1) | 
         datos_fich_dig$HR1 < mean(datos_fich_dig$HR1) - 3 * sd(datos_fich_dig$HR1))
 for (i in outHR1){
   datos_fich_dig$HR1[i] = mean(datos_fich_dig$HR1[i-1], datos_fich_dig$HR1[i+1])
@@ -170,6 +173,27 @@ for (i in outTOCO){
 }
 ```
 
+## Gráfico Fichero Digital sin outliers:
+
+```{r}
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(title = 'Fichero Digital', x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres, scales = "free") + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
+```
+
 ## Fichero Analógico:
 
 ```{r}
@@ -178,6 +202,7 @@ read.filename <- file(fich,'rb')
 tamanyo <- file.info(fich)$size
 
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
+close(read.filename)
 
 tiempo <- c()
 
@@ -217,7 +242,7 @@ any(is.na(datos_anal_tiemp))
 any(is.null(datos_anal_tiemp))
 apply(datos_anal_tiemp,2,function(x){any(is.infinite(x))})
 ```
-Como podemos comprobar, no existen datoa anomalos en el Fichero Analógico.
+\-Como podemos comprobar, no existen datoa anomalos en el Fichero Analógico.
 
 ## Analisis Exploratorio:
 
