@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r}
+rm(list=ls())
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -15,7 +16,7 @@ library(plotly)
 ## Carpeta:
 
 ```{r}
-carpeta <- 'data/0795xalvii8a7/27_09_2022/10.11.12/'
+carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
 ```
 
 ## Cabecera Fichero Analógico:
@@ -130,70 +131,6 @@ grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
 grafico
 ```
-
-## Comprobación outliers Fichero Digital:
-
-```{r}
-apply(datos_fich_dig,2,function(x){any(is.na(x))})
-apply(datos_fich_dig,2,function(x){any(is.null(x))})
-apply(datos_fich_dig,2,function(x){any(is.infinite(x))})
-```
-## Quitamos outliers Fichero Digital:
-
-```{r}
-outHR1 = which(datos_fich_dig$HR1 > mean(datos_fich_dig$HR1) + 3 * sd(datos_fich_dig$HR1) | 
-        datos_fich_dig$HR1 < mean(datos_fich_dig$HR1) - 3 * sd(datos_fich_dig$HR1))
-for (i in outHR1){
-  datos_fich_dig$HR1[i] = mean(datos_fich_dig$HR1[i-1], datos_fich_dig$HR1[i+1])
-}
-
-outHR2 = which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR2) + 2.5 * sd(datos_fich_dig$HR2) | 
-        datos_fich_dig$HR2 < mean(datos_fich_dig$HR2) - 2.5 * sd(datos_fich_dig$HR2))
-for (i in outHR2){
-  datos_fich_dig$HR2[i] = mean(datos_fich_dig$HR2[i-1], datos_fich_dig$HR2[i+1])
-}
-
-outMHR = which(datos_fich_dig$MHR == 16)
-for (i in outMHR){
-  datos_fich_dig$MHR[i] = mean(datos_fich_dig$MHR[i-1], datos_fich_dig$MHR[i+1])
-}
-
-
-outTOCO = c()
-for (l in 2:(length(datos_fich_dig$TOCO) - 1)){
-  dat = datos_fich_dig$TOCO[l]
-  ant = datos_fich_dig$TOCO[l - 1]
-  pos = datos_fich_dig$TOCO[l + 1]
-  if ((dat < (ant - 10)) | (dat > (ant + 10)) | (dat < (pos - 10)) | (dat > (pos + 10))){
-    outTOCO <- c(outTOCO, l)
-  }
-}
-for (i in outTOCO){
-  datos_fich_dig$TOCO[i] = mean(datos_fich_dig$TOCO[i-1], datos_fich_dig$TOCO[i+1])
-}
-```
-
-## Gráfico Fichero Digital sin outliers:
-
-```{r}
-datos_fich_dig2 <- datos_fich_dig %>%
-  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
-
-datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
-
-grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
-  geom_line() +
-  labs(title = 'Fichero Digital', x = 'Tiempo', y = 'Valor', color = 'Variable') +
-  theme_bw() +
-  facet_wrap(.~nombres, scales = "free") + 
-  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
-  
-
-grafico <- ggplotly(grafico1)%>%
-  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
-grafico
-```
-
 ## Fichero Analógico:
 
 ```{r}
@@ -235,23 +172,190 @@ grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
 grafico
 ```
-## Comprobación outliers Fichero Analógico:
+
+## ## Analisis Exploratorio Fichero Digital:
 
 ```{r}
+#Hacemos una exploracion inical de los datos:
+summary(datos_fich_dig)
+head(datos_fich_dig)
+tail(datos_fich_dig)
+
+#Observamos si hay valores NA, NULL o INF:
+apply(datos_fich_dig,2,function(x){any(is.na(x))})
+apply(datos_fich_dig,2,function(x){any(is.null(x))})
+apply(datos_fich_dig,2,function(x){any(is.infinite(x))})
+
+# Regla 3 sigma
+reglasigma <- function(x) { 
+  m <- mean(x,na.rm = T)
+  s <- sd(x,na.rm = T)
+  out <- (x>(m+3*s)|x<(m-3*s))
+}
+
+
+# Identificador Hampel
+reglahampel <- function(x) { 
+  m <- median(x,na.rm = T)
+  s <- madm(x,na.rm = T)
+  out <- (x>(m+3*s)|x<(m-3*s))
+}
+
+
+# Regla boxplot
+reglaboxplot <- function(x) { 
+  q1 <- quantile(x, 1 / 4, na.rm = T)
+  q2 <- quantile(x, 3 / 4, na.rm = T)
+  i <- IQR(x, na.rm = T)
+  out <- (x>(q2+1.5*i)|x<(q1-1.5*i))
+}
+
+
+# Percentiles
+reglapercentil <- function(x){ 
+  q1 <- quantile(x, 0.05, na.rm = T)
+  q2 <- quantile(x, 0.95, na.rm = T)
+  out <- (x>q2|x<q1)
+}
+
+metodos <- list(reglasigma=reglasigma,reglaboxplot=reglaboxplot,reglapercentil=reglapercentil)
+
+#Aplicamos los metodos a las variables:
+datos_fich_dig <- datos_fich_dig %>% select(c(HR1, HR2, MHR, TOCO)) %>% mutate(across(where(is.numeric), metodos))
+head(datos_fich_dig)
+
+#Comporbamos el número de outliers detectados por método:
+datos_fich_dig %>% select(contains("regla")) %>% summarise(across(everything(), ~sum(.,na.rm = T
+)))
+
+
+# Valores etiquetados como outliers, ordenados de menor a mayor:
+sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglasigma])
+sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglaboxplot])
+sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglapercentil])
+```
+
+## Analisis Exploratorio Fichero Analógico:
+
+```{r}
+#Hacemos una exploracion inical de los datos:
+summary(datos_fich_anal2)
+head(datos_fich_anal2)
+tail(datos_fich_anal2)
+
+#Observamos si hay valores NA, NULL o INF:
 any(is.na(datos_anal_tiemp))
 any(is.null(datos_anal_tiemp))
 apply(datos_anal_tiemp,2,function(x){any(is.infinite(x))})
-```
-\-Como podemos comprobar, no existen datoa anomalos en el Fichero Analógico.
 
-## Analisis Exploratorio:
+# Regla 3 sigma
+reglasigma <- function(x) { 
+  m <- mean(x,na.rm = T)
+  s <- sd(x,na.rm = T)
+  out <- (x>(m+3*s)|x<(m-3*s))
+}
+
+
+# Identificador Hampel
+reglahampel <- function(x) { 
+  m <- median(x,na.rm = T)
+  s <- madm(x,na.rm = T)
+  out <- (x>(m+3*s)|x<(m-3*s))
+}
+
+
+# Regla boxplot
+reglaboxplot <- function(x) { 
+  q1 <- quantile(x, 1 / 4, na.rm = T)
+  q2 <- quantile(x, 3 / 4, na.rm = T)
+  i <- IQR(x, na.rm = T)
+  out <- (x>(q2+1.5*i)|x<(q1-1.5*i))
+}
+
+
+# Percentiles
+reglapercentil <- function(x){ 
+  q1 <- quantile(x, 0.05, na.rm = T)
+  q2 <- quantile(x, 0.95, na.rm = T)
+  out <- (x>q2|x<q1)
+}
+
+metodos <- list(reglasigma=reglasigma,reglaboxplot=reglaboxplot,reglapercentil=reglapercentil)
+
+#Aplicamos los metodos a las variables:
+datos_fich_dig <- datos_fich_dig %>% select(c(HR1, HR2, MHR, TOCO)) %>% mutate(across(where(is.numeric), metodos))
+head(datos_fich_dig)
+
+#Comporbamos el número de outliers detectados por método:
+datos_fich_dig %>% select(contains("regla")) %>% summarise(across(everything(), ~sum(.,na.rm = T
+)))
+
+
+# Valores etiquetados como outliers, ordenados de menor a mayor:
+sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglasigma])
+sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglaboxplot])
+sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglapercentil])
+```
+
+## Quitamos outliers Fichero Digital:
 
 ```{r}
-summary(datos_fich_anal2)
-summary(datos_fich_dig)
+outHR1 = which(datos_fich_dig$HR1 > mean(datos_fich_dig$HR1) + 3 * sd(datos_fich_dig$HR1) | 
+        datos_fich_dig$HR1 < mean(datos_fich_dig$HR1) - 3 * sd(datos_fich_dig$HR1))
+for (i in outHR1){
+  datos_fich_dig$HR1[i] = mean(datos_fich_dig$HR1[i-1], datos_fich_dig$HR1[i+1])
+}
+
+outHR2 = which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR2) + 2.5 * sd(datos_fich_dig$HR2) | 
+        datos_fich_dig$HR2 < mean(datos_fich_dig$HR2) - 2.5 * sd(datos_fich_dig$HR2))
+for (i in outHR2){
+  datos_fich_dig$HR2[i] = mean(datos_fich_dig$HR2[i-1], datos_fich_dig$HR2[i+1])
+}
+
+outMHR = which(datos_fich_dig$MHR == 16)
+for (i in outMHR){
+  datos_fich_dig$MHR[i] = mean(datos_fich_dig$MHR[i-1], datos_fich_dig$MHR[i+1])
+}
+
+
+outTOCO = c()
+for (l in 2:(length(datos_fich_dig$TOCO) - 1)){
+  dat = datos_fich_dig$TOCO[l]
+  ant = datos_fich_dig$TOCO[l - 1]
+  pos = datos_fich_dig$TOCO[l + 1]
+  if ((dat < (ant - 10)) | (dat > (ant + 10)) | (dat < (pos - 10)) | (dat > (pos + 10))){
+    outTOCO <- c(outTOCO, l)
+  }
+}
+for (i in outTOCO){
+  datos_fich_dig$TOCO[i] = mean(datos_fich_dig$TOCO[i-1], datos_fich_dig$TOCO[i+1])
+}
 ```
-Podemos observar la presencia de diferentes otliers en el fichero digital:
-\- Podemos observar valores mínimos en 0, lo cual no puede ser debido a que son medidas de los latidos, tanto de los fetos como de la madre. Posiblemente sean errores a la hora de medir los datos.
+
+
+## Gráfico Fichero Digital sin outliers:
+
+```{r}
+datos_fich_dig2 <- datos_fich_dig %>%
+  pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
+
+datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
+
+grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
+  geom_line() +
+  labs(title = 'Fichero Digital', x = 'Tiempo', y = 'Valor', color = 'Variable') +
+  theme_bw() +
+  facet_wrap(.~nombres, scales = "free") + 
+  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+
+grafico <- ggplotly(grafico1)%>%
+  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico
+```
+
+
+
 
 ## Preguntas:
 
