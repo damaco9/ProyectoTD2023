@@ -1,31 +1,160 @@
 ---
-title: "ProyectoTD1"
+title: "ProyectoTD2023"
 author: "Daniel Macho Collado, Paula Rodriguez Lanzas, Lucía López López, Gonzalo Sánchez Muñoz"
 date: "2023-04-19"
 output: html_document
 ---
 
-```{r}
+## Indice:
+
+-   <div>
+
+    [1. Introducción.](#1.-Introducción:)
+
+    -   <div>
+
+        [1.2 Cargar Librerias Automaticamente.](#1.2.-Carga-de-Librerías:)
+
+        </div>
+
+    </div>
+
+-   <div>
+
+    [2. Cargar y Visualizar los Datos Iniciales.](#2.-Cargar-y-Visualizar-los-Datos-Iniciales:)
+
+    </div>
+
+-   <div>
+
+    [3. Análisis Exploratorio.](#3.-Analisis-Exploratorio:)
+
+    -   <div>
+
+        [3.1 Preguntas Iniciales.](#3.1.-Preguntas-Iniciales:)
+
+        </div>
+
+    </div>
+
+-   <div>
+
+    [4. Modificación de los Datos y Visualización.](#4.-Modificamos-los-Datos-y-los-Visualizamos:)
+
+    </div>
+
+## 1. Introducción: {#1.-Introducción:}
+
+Descargamos los ficheros de datos con la información sobre los pacientes de la empresa `ACME Monitorización Fetal`. Cada paciente tiene la fecha de adquisición del registro, que a su vez contiene la horas u horas en la que se adquirió dicho registro. Dentro de cada registro siempre hay 4 registros binarios, de los cuales nos interesan las siguientes variables:
+
+#### cabecera_FicheroDigital.dat
+
+`Dia, mes y año` : Fecha en la que se adquirió el registro.
+
+`Hora, min y seg` : Horario en el que se adquirió el registro.
+
+`Frecuencia de muestreo` : Ritmo de los latidos del corazón.
+
+`N° de canales` : Numero de canales del fichero Digital.
+
+#### cabecera_FicheroAnalogico.dat
+
+`Dia, mes y año` : Fecha en la que se adquirió el registro.
+
+`Hora, min y seg` : Horario en el que se adquirió el registro.
+
+`Frecuencia de muestreo` : Ritmo de los latidos del corazón.
+
+`Resolucion del ADC` : Establece el número de niveles en los que se puede dividir un rango de entrada analógico.
+
+`Voltaje max y min` : Valor de tensión o voltaje es proporcional (o semejante) al valor de la información que representa.
+
+#### FicheroDigital.dat
+
+`HR1` : Frecuencia Cardíaca Feta o FCF.
+
+`HR2` : Frecuencia Cardíaca Feta o FCF.
+
+`MHR` : Frecuencia Cardíaca Materna o FCM.
+
+`TOCO` : Actividad Uterina o AU.
+
+`SPO2`: Es el resultado en porcentaje de la obtención de la Saturación de Oxígeno Materno.
+
+`VCP` : Frecuencia Cardíaca Feta o FCF.
+
+`Psistólica(Ps)` : Frecuencia Cardíaca Feta o FCF.
+
+`Pdiastólica(Pd)` : Frecuencia Cardíaca Materna o FCM.
+
+`Pmedia(Pm)` : Actividad Uterina o AU.
+
+#### FicheroAnalogico.dat
+
+En este fichero solo tenemos una variable, con una frequencia de muestreo de 1000.
+
+## 1.2. Carga de Librerías: {#1.2.-Carga-de-Librerías:}
+
+Empezamos cargando las librerías necesarias para realizar el trabajo.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r eval=T, include=F}
 rm(list=ls())
-library(dplyr)
-library(ggplot2)
-library(tidyr)
-library(plotly)
+packages = c("knitr", "ggplot2","tidyr","dplyr","readr","tidyverse", "plotly","broom","kableExtra")
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE,repos='http://cran.rediris.es')
+    library(x, character.only = TRUE)
+  }
+})
+search()
 ```
 
-## Carpeta:
+## 2. Cargar y Visualizar los Datos Iniciales: {#2.-Cargar-y-Visualizar-los-Datos-Iniciales:}
+
+Una vez cargadas las librerías, empezamos a realizar el codigo para importar los datos de las carpetas de los diferentes pacientes.
+
+Primero comenzamos leyendo las rutas de ls diferentes carpetas en formato binario. Nos fijamos en el formato de datos de estos ficheros y nos damos cuenta que algunos tienen datos de 1byte y otros tienen datos de 2 bytes. Tambien podemos observar que hay variables que tienen signo y otras que no. Toda esta información nos vendrá bien a la hora de importar dichos datos.
+
+Una vez importados, se los asignamos a las diferentes variables descritas en el apartado anterior y creamos data frames de las diferenets variables de los diferentes ficheros.
+
+Para los fichero digital y analógico, creamos una nueva variable (tiempo), que según la frecuencia de muestreo del fichero tendrá unos valores u otros, pero con el mismo tamaño que las demas variables del data frame, y una vez creada la añdimos en el data frame de las varibles.
+
+Con los data frames ya creados usamos las libreria `ggplot2` y `tidyr` con las que podemos modificar los datos y  mostrarlos de una manera clarificadora. 
+
+Primero, en el fichero digital, usamos *pivot_longer* y pasamos todos los nombres de las variables del data frame del fichero digital, menos el tiempo, a una sola columna, sus valores a otra columna y creamos con *subset* un subconjunto de el data frame moficado donde solo usaremos los valores donde el tiempo sea <= 300.
+
+Una vez creado, usamos *ggplot* y a su vez *facet_wrap* para crear el gráfico con la trayectoria de todas las variables respecto al tempo de dicho subconjunto.
+Por último, con la libreria `plotly` mostramos el garáfico interactivo.
+
+Después, en el fichero analógico, creamos con *subset* un subconjunto de el data frame del fichero analogico donde solo cojamos las variables que esten en el intervalo donde el tiempo este en los ultimos 10 segundos.
+
+Con este último subconjunto usamos *ggplot* para crear el gráfico de el fichero analógico y con `plotly` mostrarlo de forma interactiva.
+
+### Carpeta:
 
 ```{r}
-carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
+carpeta <- 'data/0519xxxiii14/06_02_2023/14.20.34/'
+#carpeta <- 'data/0795xalvii8a7/27_09_2022/10.11.12/'
+#carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
+#carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.31.15/'
+#carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.49.57/'
 ```
 
-## Cabecera Fichero Analógico:
+### Cabecera Fichero Analógico:
 
 ```{r}
+#Creamos la variable fich, la cual contendra la ruta al fichero:
 fich <- paste0(carpeta, 'cabecera_FicheroAnalogico.dat')
+
+#Leemos las variables de 1 byte y sin signo en modo binario:
 read.filename <- file(fich,'rb')
 cab_fich_anal <- readBin(read.filename, what = integer(),  n = 7, size = 1, signed = FALSE)
 
+#Asiganmos los datos a las varibales:
 dia <- cab_fich_anal[1]
 mes <- cab_fich_anal[2]
 anyo <- cab_fich_anal[3]
@@ -34,24 +163,33 @@ min <- cab_fich_anal[5]
 seg <- cab_fich_anal[6]
 resolucion <- cab_fich_anal[7]
 
+#Leemos las variables de 2 byte y con signo en modo binario:
 cab_fich_anal2 <- readBin(read.filename, what = integer(), n = 3, size = 2, signed = TRUE)
+#Cerramos el fichero:
 close(read.filename)
 
+#Asiganmos los datos a las varibales:
 voltaje_max <- cab_fich_anal2[1]
 voltaje_min <- cab_fich_anal2[2]
 frecuencia <- cab_fich_anal2[3]
 
+#Creamos el data frame con las variables:
 datos_cabecera_anal <- data.frame(dia, mes ,anyo, hora, min, seg, resolucion, voltaje_max, voltaje_min, frecuencia)
 ```
 
-## Cabecera Fichero Digital:
+### Cabecera Fichero Digital:
 
 ```{r}
+#Creamos la variable fich, la cual contendra la ruta al fichero:
 fich <- paste0(carpeta, 'cabecera_FicheroDigital.dat')
+
+#Leemos las variables de 1 byte y sin signo en modo binario:
 read.filename <- file(fich,'rb')
 cab_fich_dig <- readBin(read.filename, what = integer(), n = 8, size = 1, signed = FALSE)
+#Cerramos el fichero.
 close(read.filename)
 
+#Asiganmos los datos a las varibales:
 dia <- cab_fich_dig[1]
 mes <- cab_fich_dig[2]
 anyo <- cab_fich_dig[3]
@@ -61,19 +199,27 @@ seg <- cab_fich_dig[6]
 resolucion <- cab_fich_dig[7]
 canales <- cab_fich_dig[8]
 
+#Creamos el data frame con las variables:
 datos_cabecera_dig <- data.frame(dia, mes ,anyo, hora, min, seg, resolucion, canales)
 ```
 
-## Fichero Digital:
+### Fichero Digital:
 
 ```{r}
+#Creamos la variable fich, la cual contendra la ruta al fichero:
 fich <- paste0(carpeta, 'ficheroDigital.dat')
-read.filename <- file(fich,'rb')
+
+#Obtenemos el tamaño del fichero.
 tamanyo <- file.info(fich)$size
 
+#Leemos las variables de 1 byte y sin signo en modo binario:
+read.filename <- file(fich,'rb')
 fich_dig <- readBin(read.filename, what = integer(), n = tamanyo, size = 1,signed = FALSE)
+
+#Cerramos el fichero.
 close(read.filename)
 
+#Creamos los vectores de las variables para posteriormente añadir los datos a cada una.
 HR1 <- c()
 HR2 <- c()
 MHR <- c()
@@ -83,19 +229,20 @@ VCP <- c()
 Ps <- c()
 Pd <- c()
 Pm <- c()
-tiempo <- c()
 
 suma <- 0
-
+#Dividimos el tamaño del fichero entre el numero de variables:
 tamanyo2 <- file.info(fich)$size/9
 
+#Creamos la variable tiempo qu eposteriormente añadiremos al data frame con las otras variables.
+tiempo <- c()
 for (i in 1 : tamanyo2) {
 
   suma <- suma + 0.25
   tiempo[i] <- suma
 }
 
-
+#Asignamos las variables:
 for (i in seq(1, length(fich_dig), by = 9)) {
   HR1 <- c(HR1, fich_dig[i])
   HR2 <- c(HR2, fich_dig[i + 1])
@@ -108,17 +255,21 @@ for (i in seq(1, length(fich_dig), by = 9)) {
   Pm <- c(Pm, fich_dig[i + 8])
 }
 
+#Cremos el data frame:
 datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 ```
 
-## Gráfico Fichero Digital:
+### Gráfico Fichero Digital:
 
 ```{r}
+#Modificamos el data frame inicial:
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+#Creamos el subconjunto:
 datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
 
+#Creamos el gráfico:
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(title = 'Fichero Digital', x = 'Tiempo', y = 'Valor', color = 'Variable') +
@@ -126,61 +277,79 @@ grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres))
   facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
   
-
+#Mostramos el gráfico:
 grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
 grafico
 ```
-## Fichero Analógico:
+
+### Fichero Analógico:
 
 ```{r}
+#Creamos la variable fich, la cual contendra la ruta al fichero:
 fich <- paste0(carpeta, 'ficheroAnalogico.dat')
-read.filename <- file(fich,'rb')
+
+#Obtenemos el tamaño del fichero:
 tamanyo <- file.info(fich)$size
 
+#Leemos las variables de 1 byte y sin signo en modo binario:
+read.filename <- file(fich,'rb')
 fich_anal <- readBin(read.filename, what = integer(),  n = tamanyo/2, size = 2, signed = TRUE)
+
+#Cerramos el fichero:
 close(read.filename)
 
+#Creamos la variable tiempo
 tiempo <- c()
-
 suma <- 0
 
+#Dividimos el tamaño del fichero entre las variables
 tamanyo2 <- file.info(fich)$size/2
 Freq_muestreo <- 1000
 
+#Añadimos los valores de tiempo:
 for (i in 1 : tamanyo2) {
 
   suma <- suma + 1/Freq_muestreo
   tiempo[i] <- suma
 }
 
+#Creamos el data frame:
 datos_fich_anal2 <- data.frame(fich_anal, tiempo)
 ```
 
-## Gráfico Fichero Analógico:
+### Gráfico Fichero Analógico:
 
 ```{r}
+#Creamos el subconjunto:
 datos_anal_tiemp <- subset(datos_fich_anal2, tiempo > max(tiempo)-10)
 
+#Creamos el gráfico:
 grafico1 <- ggplot(datos_anal_tiemp, aes(x = tiempo, y = fich_anal)) + 
   geom_line(color = 'blue') +
   labs(title = 'Fichero Analógico', x = 'Tiempo', y = 'Valor') +
   theme_bw() +
   scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250))
 
+#Mostramos el gráfico:
 grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
 grafico
 ```
 
-## ## Analisis Exploratorio Fichero Digital:
+## 3. Analisis Exploratorio: {#3.-Analisis-Exploratorio:}
+Hechamos un primer vistazo a los datos iniciales.
+
+### Analisis Exploratorio Fichero Digital:
 
 ```{r}
-#Hacemos una exploracion inical de los datos:
-summary(datos_fich_dig)
-head(datos_fich_dig)
-tail(datos_fich_dig)
+#Hacemos una exploración inical de los datos:
+summary(datos_fich_dig)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
+head(datos_fich_dig)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
+tail(datos_fich_dig)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
+```
 
+```{r, include=FALSE}
 #Observamos si hay valores NA, NULL o INF:
 apply(datos_fich_dig,2,function(x){any(is.na(x))})
 apply(datos_fich_dig,2,function(x){any(is.null(x))})
@@ -221,32 +390,50 @@ reglapercentil <- function(x){
 metodos <- list(reglasigma=reglasigma,reglaboxplot=reglaboxplot,reglapercentil=reglapercentil)
 
 #Aplicamos los metodos a las variables:
-datos_fich_dig <- datos_fich_dig %>% select(c(HR1, HR2, MHR, TOCO)) %>% mutate(across(where(is.numeric), metodos))
-head(datos_fich_dig)
+datos_fich_dig_OUT <- datos_fich_dig %>% select(c(HR1, HR2, MHR, TOCO)) %>% mutate(across(where(is.numeric), metodos))
+head(datos_fich_dig_OUT)
 
 #Comporbamos el número de outliers detectados por método:
-datos_fich_dig %>% select(contains("regla")) %>% summarise(across(everything(), ~sum(.,na.rm = T
-)))
+datos_fich_dig_OUT %>% select(contains("regla")) %>% summarise(across(everything(), ~sum(.,na.rm = T
+)))%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
 
 
-# Valores etiquetados como outliers, ordenados de menor a mayor:
-sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglasigma])
-sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglaboxplot])
-sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglapercentil])
 ```
 
-## Analisis Exploratorio Fichero Analógico:
+```{r, include=FALSE}
+
+# Valores etiquetados como outliers, ordenados de menor a mayor:
+sort(datos_fich_dig_OUT$HR1[datos_fich_dig_OUT$HR1_reglasigma])
+sort(datos_fich_dig_OUT$HR1[datos_fich_dig_OUT$HR1_reglaboxplot])
+sort(datos_fich_dig_OUT$HR1[datos_fich_dig_OUT$HR1_reglapercentil])
+
+sort(datos_fich_dig_OUT$HR2[datos_fich_dig_OUT$HR2_reglasigma])
+sort(datos_fich_dig_OUT$HR2[datos_fich_dig_OUT$HR2_reglaboxplot])
+sort(datos_fich_dig_OUT$HR2[datos_fich_dig_OUT$HR2_reglapercentil])
+
+sort(datos_fich_dig_OUT$MHR[datos_fich_dig_OUT$MHR_reglasigma])
+sort(datos_fich_dig_OUT$MHR[datos_fich_dig_OUT$MHR_reglaboxplot])
+sort(datos_fich_dig_OUT$MHR[datos_fich_dig_OUT$MHR_reglapercentil])
+
+sort(datos_fich_dig_OUT$TOCO[datos_fich_dig_OUT$TOCO_reglasigma])
+sort(datos_fich_dig_OUT$TOCO[datos_fich_dig_OUT$TOCO_reglaboxplot])
+sort(datos_fich_dig_OUT$TOCO[datos_fich_dig_OUT$TOCO_reglapercentil])
+```
+
+### Analisis Exploratorio Fichero Analógico:
 
 ```{r}
-#Hacemos una exploracion inical de los datos:
-summary(datos_fich_anal2)
-head(datos_fich_anal2)
-tail(datos_fich_anal2)
+#Hacemos una exploración inical de los datos:
+summary(datos_fich_anal2)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
+head(datos_fich_anal2)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
+tail(datos_fich_anal2)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
+```
+```{r, include=FALSE}
 
 #Observamos si hay valores NA, NULL o INF:
-any(is.na(datos_anal_tiemp))
-any(is.null(datos_anal_tiemp))
-apply(datos_anal_tiemp,2,function(x){any(is.infinite(x))})
+any(is.na(datos_fich_anal2))
+any(is.null(datos_fich_anal2))
+apply(datos_fich_anal2,2,function(x){any(is.infinite(x))})
 
 # Regla 3 sigma
 reglasigma <- function(x) { 
@@ -280,45 +467,93 @@ reglapercentil <- function(x){
   out <- (x>q2|x<q1)
 }
 
+
 metodos <- list(reglasigma=reglasigma,reglaboxplot=reglaboxplot,reglapercentil=reglapercentil)
 
 #Aplicamos los metodos a las variables:
-datos_fich_dig <- datos_fich_dig %>% select(c(HR1, HR2, MHR, TOCO)) %>% mutate(across(where(is.numeric), metodos))
-head(datos_fich_dig)
+datos_fich_anal2_OUT <- datos_fich_anal2 %>% select(fich_anal) %>% mutate(across(where(is.numeric), metodos))
+head(datos_fich_anal2_OUT)
 
 #Comporbamos el número de outliers detectados por método:
-datos_fich_dig %>% select(contains("regla")) %>% summarise(across(everything(), ~sum(.,na.rm = T
+datos_fich_anal2_OUT %>% select(contains("regla")) %>% summarise(across(everything(), ~sum(.,na.rm = T
 )))
 
 
 # Valores etiquetados como outliers, ordenados de menor a mayor:
-sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglasigma])
-sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglaboxplot])
-sort(datos_fich_dig$HR1[datos_fich_dig$HR1_reglapercentil])
+sort(datos_fich_anal2_OUT$fich_anal[datos_fich_anal2_OUT$fich_anal_reglasigma])
+sort(datos_fich_anal2_OUT$fich_anal[datos_fich_anal2_OUT$fich_anal_reglaboxplot])
+sort(datos_fich_anal2_OUT$fich_anal[datos_fich_anal2_OUT$fich_anal_reglapercentil])
 ```
 
-## Quitamos outliers Fichero Digital:
+## 3.1. Preguntas Iniciales: {#3.1.-Preguntas-Iniciales:}
+
+Vamos a llamar a las distintas pacientes por sus identificadores en las carpetas
+
+\- ¿Hay diferencia entre los datos analogicos de los distintos pacientes?
+Si vemos los datos almacenados en los ficheros analogicos de las distintas pacientes, es decir, los de las distintas carpetas; encontramos un detalle muy interesante y es que los datos en las carpetas *0519xxxiii14* y *0795xalvii8a7* rondan entre un intervalo de valores más o menos razonable. Entre 80 y 104 para *0519xxxiii14* y 69 y 97 para *0795xalvii8a7*. Sin embargo, en los datos de la paciente *1059xlxveei79_ECGf2*, los datos que vemos en el fichero analogico cambian radicalmente. En el gráfico se aprecia fácilmente, podemos ver que en intervalo ahora se situa entre -1494 y 1965. Lo que cambia completamente la manera de entender los resultados.
+
+\- ¿Hay diferencia entre los datos digitales de los distintos pacientes?
+En los datos almacenados en ficheros digitales también encontramos diferencias muy importantes entre las distintas pacientes. Como podemos observar. Tanto *0519xxxiii14* como *0795xalvii8a7* tienen muchas variables que no cambian en ningún momento, sino que se situan siempre en el valor 0. Eso nos ocurre con las variables HR2, Pd, Pm, Ps y SPO; y con la paciente *0795xalvii8a7* también nos ocurre con MHR.
+
+Esto ya en un principio podría sorprendernos, pero lo más curioso es que a la paciente *1059xlxveei79_ECGf2*, que ya hemos visto que tiene unos datos muy diferentes en el fichero analogico, tiene valores para todas estas variables. De hecho podemos observar como las variables Pd, Pm, Ps y SPO simplemente pasan de valer 0 a dar un salto y mantenerse en otro valor en un momento determinado. Y con las variables HR2 y MHR vemos que varían en cada momento y que en muchas ocasiones pasan a valer 0; lo que nos hace sospechar si pueden ser outliers.
+
+Sin embargo, podemos, al menos, suponer que existe una relación entre que los valores de las distintas variables digitales varien y que las del fichero analogico tenga un rango tan amplio. Aunque no podemos saber a qué se debe, quizás sea solo que los datos se recogieros de manera diferente o erronea.
+
+\- ¿Encontramos datos faltantes?¿Qué tipo de dato faltante son?¿A qué pueden deberse?
+Encontramos muchos datos faltantes en los datos del fichero digital de la paciente *0795xalvii8a7* tomados el dia 27 de septiembre de 2022 a las 10.11.00. Los datos faltantes no han sido inputados ni sustituidos por 0 ni nada, sino que simplemente no aparecen.
+
+Sin embargo, vemos que tenemos otro fichero tomado el mismo día 12 segundos después de estos. Esto nos lleva a cuestionarnos si el hecho de que no tengamos datos en este fichero es debido a algún problema a la hora de tomar medidas y se continuó inmediatamente. Lo que tendría sentido y explicaría que tuviesemos tan pocos datos en este fichero pero tantos en un fichero tomados a continuación.
+
+Así que suponiendo que esto sea así y que simplemente se paró la toma de medidas podemos asumir que son datos perdidos MNAR, missing not at random porque la causa es conocida. No hay que imputarlos.
+
+Por otro lado, encontramos que en muchas variables de las pacientes *0519xxxiii14* y *0795xalvii8a7* solo hay valor 0. Eso no sabemos decir si son datos falatntes o simplemente es normal que se mantengan todo el tiempo en valor 0.
+
+\- ¿Encontramos algún valor anómalo (outlier) en nuestros datos?
+Si nos fijamos en los datos de ficheros digitales vemos que siempre encontramos que las datos de la variable HR1 tienen momentos en los que produce picos hacia abajo y adquiere el valor o 16 o 0. Vemos que también le ocurre a *0519xxxiii14* en MHR y a *1059xlxveei79_ECGf2* le ocurre en muchas variables; como HR2 o TOCO, en la que de repente toma valores muy altos. Esto lo más probable es que sean errores de las máquinas al tomar mediciones, que tomen los valores 16 o 0 cuando tienen errores al tomar medidas en algun momento concreto, porque solo aparecen en 1 instante.
+
+No parece que se pueda ver un patrón en estos datos anómalos, más allá de que todos toman valor 0, 16, o similares. Pero cada valor aparece en un punto diferente y no se observa una relacion entre variables ni entre pacientes.
+
+Un posible método de imputación para todos estos datos podría ser sacar la media entre el valor anterior y posterior al del dato anómalo. Pero en la variable TOCO de *1059xlxveei79_ECGf2* no valdría la pena imputar ya que estos datos anómalos podrían ser causa de que los datos de esta pacienta difieren mucho a los de las otras.
+
+\- ¿Qué patrones o características destacables se pueden observar al comparar las diferentes variables entre si para la paciente *1059xlxveei79_ECGf2*?¿A qué puede deberse la diferencia con los otros datos?
+Como hemos comentado ya, los datos de la paciente *1059xlxveei79_ECGf2* son extrañamente diferentes a las otras 2 pacientes. Esto puede deberse a diferentes posibles causas. Pero uno en que hemos pensado, sabiendo el tipo de datos que estamos tratando, es que el feto de esta pacienta está mucho más desarrollado que los otros. LLeva más tiempo de gestación y por eso los valores se parecen más a los de una persona común.
+
+Por otra parte, lo que vemos en los datos de ficheros analogicos es que la forma sí que parece ser el de un cardiograma. Donde se observan los picos de los latidos regulares.
+
+En los ficheros digitales vemos lo siguiente, y es que en el puento 103-104 las variables Pd, Pm y Ps dan un salto y pasan de valer 0 a valer 94, 118 y 155 respectivamente. La variable SPO hace lo mismo en 236-236.25, que pasa a valer 98. Luego vemos que TOCo toma valores mucho más variados que en las otras dos pacientes y HR2 varía mucho.
+
+No podemos saber con seguridad, a partir de la informacion que tenemos el motivo de estas variaciones, pero la tesis de que la paciente lleva más semanas de gestación explicaría en parte estas diferencias; ya que indicaria que el bebé está mucho más desarrollado y se pueden tomar más medidas de él porque responde más intensamente a estímulos externos.
+
+
+## 4. Modificamos los Datos y los Visualizamos: {#4.-Modificamos-los-Datos-y-los-Visualizamos:}
+
+### Quitamos outliers Fichero Digital:
 
 ```{r}
-outHR1 = which(datos_fich_dig$HR1 > mean(datos_fich_dig$HR1) + 3 * sd(datos_fich_dig$HR1) | 
-        datos_fich_dig$HR1 < mean(datos_fich_dig$HR1) - 3 * sd(datos_fich_dig$HR1))
+
+outHR1 <- which(datos_fich_dig$HR1 > mean(datos_fich_dig$HR1) + 2.5 * sd(datos_fich_dig$HR1) | 
+        datos_fich_dig$HR1 < mean(datos_fich_dig$HR1) - 2.5 * sd(datos_fich_dig$HR1) | datos_fich_dig$HR1 == 16)
+
 for (i in outHR1){
-  datos_fich_dig$HR1[i] = mean(datos_fich_dig$HR1[i-1], datos_fich_dig$HR1[i+1])
+  datos_fich_dig$HR1[i] = mean(datos_fich_dig$HR1)
 }
 
-outHR2 = which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR2) + 2.5 * sd(datos_fich_dig$HR2) | 
+
+outHR2 <- which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR2) + 2.5 * sd(datos_fich_dig$HR2) | 
         datos_fich_dig$HR2 < mean(datos_fich_dig$HR2) - 2.5 * sd(datos_fich_dig$HR2))
 for (i in outHR2){
-  datos_fich_dig$HR2[i] = mean(datos_fich_dig$HR2[i-1], datos_fich_dig$HR2[i+1])
+  datos_fich_dig$HR2[i] = mean(datos_fich_dig$HR2)
 }
 
-outMHR = which(datos_fich_dig$MHR == 16)
+
+outMHR <- which(datos_fich_dig$MHR > mean(datos_fich_dig$MHR) + 1.5 * sd(datos_fich_dig$MHR) | 
+        datos_fich_dig$MHR < mean(datos_fich_dig$MHR) - 1.5 * sd(datos_fich_dig$MHR) |          datos_fich_dig$MHR == 16)
 for (i in outMHR){
-  datos_fich_dig$MHR[i] = mean(datos_fich_dig$MHR[i-1], datos_fich_dig$MHR[i+1])
+  datos_fich_dig$MHR[i] = mean(datos_fich_dig$MHR)
 }
 
 
-outTOCO = c()
+outTOCO <- c()
 for (l in 2:(length(datos_fich_dig$TOCO) - 1)){
   dat = datos_fich_dig$TOCO[l]
   ant = datos_fich_dig$TOCO[l - 1]
@@ -328,10 +563,9 @@ for (l in 2:(length(datos_fich_dig$TOCO) - 1)){
   }
 }
 for (i in outTOCO){
-  datos_fich_dig$TOCO[i] = mean(datos_fich_dig$TOCO[i-1], datos_fich_dig$TOCO[i+1])
+  datos_fich_dig$TOCO[i] = mean(datos_fich_dig$TOCO)
 }
 ```
-
 
 ## Gráfico Fichero Digital sin outliers:
 
@@ -353,20 +587,3 @@ grafico <- ggplotly(grafico1)%>%
   layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
 grafico
 ```
-
-
-
-
-## Preguntas:
-
-\- Cuál es el valor con más latidos por minuto? Y el mínimo?
-
-\- Cuál es el momento del día donde normalmente se está más tranquilo, los latidos por minutos? Y el que más?
-
-\- Cuál es la frecuencia cardíaca basal del feto?
-
-\- Cómo varían las diferentes variables en el tiempo?
-
-\- Qué patrones o características destacables se pueden observar al comparar las diferentes variables entre si?
-
-\- Encontramos algún valor anómalo (outlier) en nuestros datos?
