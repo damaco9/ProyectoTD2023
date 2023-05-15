@@ -1,8 +1,11 @@
 ---
 title: "ProyectoTD2023"
-author: "Daniel Macho Collado, Paula Rodriguez Lanzas, Lucía López López, Gonzalo Sánchez Muñoz"
+author: Daniel Macho Collado, Paula Rodriguez Lanzas, Lucía López López, Gonzalo Sánchez
+  Muñoz
 date: "2023-04-19"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ## Indice:
@@ -29,12 +32,6 @@ output: html_document
 
     [3. Análisis Exploratorio.](#3.-Analisis-Exploratorio:)
 
-    -   <div>
-
-        [3.1 Preguntas Iniciales.](#3.1.-Preguntas-Iniciales:)
-
-        </div>
-
     </div>
 
 -   <div>
@@ -42,6 +39,12 @@ output: html_document
     [4. Modificación de los Datos y Visualización.](#4.-Modificamos-los-Datos-y-los-Visualizamos:)
 
     </div>
+
+    -   <div>
+
+        [4.1 Preguntas.](#3.1.-Preguntas:)
+
+        </div>
 
 ## 1. Introducción: {#1.-Introducción:}
 
@@ -103,7 +106,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r eval=T, include=F}
 rm(list=ls())
-packages = c("knitr", "ggplot2","tidyr","dplyr","readr","tidyverse", "plotly","broom","kableExtra")
+packages = c("knitr", "ggplot2","tidyr","dplyr","readr","tidyverse", "plotly","kableExtra")
 package.check <- lapply(packages, FUN = function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, dependencies = TRUE,repos='http://cran.rediris.es')
@@ -123,28 +126,35 @@ Una vez importados, se los asignamos a las diferentes variables descritas en el 
 
 Para los fichero digital y analógico, creamos una nueva variable (tiempo), que según la frecuencia de muestreo del fichero tendrá unos valores u otros, pero con el mismo tamaño que las demas variables del data frame, y una vez creada la añdimos en el data frame de las varibles.
 
-Con los data frames ya creados usamos las libreria `ggplot2` y `tidyr` con las que podemos modificar los datos y  mostrarlos de una manera clarificadora. 
+Con los data frames ya creados usamos las libreria `ggplot2` y `tidyr` con las que podemos modificar los datos y mostrarlos de una manera clarificadora.
 
-Primero, en el fichero digital, usamos *pivot_longer* y pasamos todos los nombres de las variables del data frame del fichero digital, menos el tiempo, a una sola columna, sus valores a otra columna y creamos con *subset* un subconjunto de el data frame moficado donde solo usaremos los valores donde el tiempo sea <= 300.
+Primero, en el fichero digital, usamos *pivot_longer* y pasamos todos los nombres de las variables del data frame del fichero digital, menos el tiempo, a una sola columna, sus valores a otra columna y creamos con *subset* un subconjunto de el data frame moficado donde solo usaremos los valores donde el tiempo sea \<= 300.
 
-Una vez creado, usamos *ggplot* y a su vez *facet_wrap* para crear el gráfico con la trayectoria de todas las variables respecto al tempo de dicho subconjunto.
-Por último, con la libreria `plotly` mostramos el garáfico interactivo.
+Una vez creado, usamos *ggplot* y a su vez *facet_wrap* para crear el gráfico con la trayectoria de todas las variables respecto al tempo de dicho subconjunto. Por último, con la libreria `plotly` mostramos el garáfico interactivo.
 
 Después, en el fichero analógico, creamos con *subset* un subconjunto de el data frame del fichero analogico donde solo cojamos las variables que esten en el intervalo donde el tiempo este en los ultimos 10 segundos.
 
 Con este último subconjunto usamos *ggplot* para crear el gráfico de el fichero analógico y con `plotly` mostrarlo de forma interactiva.
 
 ### Carpeta:
+Escogemos la ruta del fichero que queremos analizar:
 
-```{r}
-carpeta <- 'data/0519xxxiii14/06_02_2023/14.20.34/'
+```{r, include=FALSE}
+#carpeta <- 'data/0519xxxiii14/06_02_2023/14.20.34/'
+#carpeta <- 'data/0795xalvii8a7/27_09_2022/10.11.00/'
 #carpeta <- 'data/0795xalvii8a7/27_09_2022/10.11.12/'
 #carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
 #carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.31.15/'
 #carpeta <- 'data/ecg5_210xlxi81_IP_39_eBR_BRP_720/12.49.57/'
 ```
 
+
+```{r}
+carpeta <- 'data/1059xlxveei79_ECGf2/27_09_2022/14.42.29_III_ECGyEXTyRESTO/'
+```
+
 ### Cabecera Fichero Analógico:
+Empezamos leeyendo la información de la cabecera del fichero analógico:
 
 ```{r}
 #Creamos la variable fich, la cual contendra la ruta al fichero:
@@ -178,6 +188,7 @@ datos_cabecera_anal <- data.frame(dia, mes ,anyo, hora, min, seg, resolucion, vo
 ```
 
 ### Cabecera Fichero Digital:
+Ahora leemos la información de la cabecera del fichero digital:
 
 ```{r}
 #Creamos la variable fich, la cual contendra la ruta al fichero:
@@ -204,6 +215,7 @@ datos_cabecera_dig <- data.frame(dia, mes ,anyo, hora, min, seg, resolucion, can
 ```
 
 ### Fichero Digital:
+Una vez leidas las cabeceras de ambos ficheros empezamos con la lectura de los ficheros. Primero leeremos la infromación del fichero digital:
 
 ```{r}
 #Creamos la variable fich, la cual contendra la ruta al fichero:
@@ -260,6 +272,7 @@ datos_fich_dig <- data.frame(HR1, HR2, MHR, TOCO, SPO2, VCP, Ps, Pd, Pm, tiempo)
 ```
 
 ### Gráfico Fichero Digital:
+Ahora que tenemos las variables llenas con los datos del fichero ditial, modificamos el data frame inicial para mostrar mejor la información y la visualizamos:
 
 ```{r}
 #Modificamos el data frame inicial:
@@ -276,14 +289,15 @@ grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres))
   theme_bw() +
   facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
-  
-#Mostramos el gráfico:
-grafico <- ggplotly(grafico1)%>%
-  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
-grafico
+
+#Mostramos el gráfico:(Esta comentado porque la librería plotly no puede compilar a pdf)
+#grafico <- ggplotly(grafico1)%>%
+#  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico1
 ```
 
 ### Fichero Analógico:
+Una vez hemos acabado con los datos iniciales del fichero digital, leemos la informacion del fichero analógico:
 
 ```{r}
 #Creamos la variable fich, la cual contendra la ruta al fichero:
@@ -319,6 +333,7 @@ datos_fich_anal2 <- data.frame(fich_anal, tiempo)
 ```
 
 ### Gráfico Fichero Analógico:
+Para finalizar este punto, mostramos la informacion leida del fichero analogico:
 
 ```{r}
 #Creamos el subconjunto:
@@ -331,14 +346,16 @@ grafico1 <- ggplot(datos_anal_tiemp, aes(x = tiempo, y = fich_anal)) +
   theme_bw() +
   scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250))
 
-#Mostramos el gráfico:
-grafico <- ggplotly(grafico1)%>%
-  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
-grafico
+#Mostramos el gráfico:(Esta comentado porque la librería plotly no puede compilar a pdf)
+#grafico <- ggplotly(grafico1)%>%
+#  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico1
 ```
 
 ## 3. Analisis Exploratorio: {#3.-Analisis-Exploratorio:}
+
 Hechamos un primer vistazo a los datos iniciales.
+Usamos la función *kable* y la función *kable_styling* de la libreria `kableExtra`, lo que nos permite hacer tablas mas estateicamente atractivas de los resultados.
 
 ### Analisis Exploratorio Fichero Digital:
 
@@ -355,7 +372,8 @@ apply(datos_fich_dig,2,function(x){any(is.na(x))})
 apply(datos_fich_dig,2,function(x){any(is.null(x))})
 apply(datos_fich_dig,2,function(x){any(is.infinite(x))})
 
-# Regla 3 sigma
+# Regla 3 sigma:Considera que los datos siguen una distribución gaussiana. Datos típicos caracterizados por la media 
+#y la dispersión por la varianza. Valores por encima de 3 desviaciones típicas se consideran outliers.
 reglasigma <- function(x) { 
   m <- mean(x,na.rm = T)
   s <- sd(x,na.rm = T)
@@ -363,15 +381,10 @@ reglasigma <- function(x) {
 }
 
 
-# Identificador Hampel
-reglahampel <- function(x) { 
-  m <- median(x,na.rm = T)
-  s <- madm(x,na.rm = T)
-  out <- (x>(m+3*s)|x<(m-3*s))
-}
-
-
-# Regla boxplot
+# Regla boxplot:A partir de los datos se calcula su diagrama de caja (boxplot) y se definen como datos típicos 
+#superiores hasta el cuartil 75%, x_s; datos típicos inferiores hasta el cuartil 25%, x_i; y la dispersión se 
+#define como el rango intercuartílico (IQR= x_s-x_i). Valores por encima de x_s+1.5*IQR o por debajo de x_i-1.5* IQR 
+#se consideran outliers.
 reglaboxplot <- function(x) { 
   q1 <- quantile(x, 1 / 4, na.rm = T)
   q2 <- quantile(x, 3 / 4, na.rm = T)
@@ -380,13 +393,14 @@ reglaboxplot <- function(x) {
 }
 
 
-# Percentiles
+# Percentiles: Cualquier valor que esté fuera del rango del percentil 5% y 95% se puede considerar como atípico. 
 reglapercentil <- function(x){ 
   q1 <- quantile(x, 0.05, na.rm = T)
   q2 <- quantile(x, 0.95, na.rm = T)
   out <- (x>q2|x<q1)
 }
 
+#Metemos los metodos en una lista:
 metodos <- list(reglasigma=reglasigma,reglaboxplot=reglaboxplot,reglapercentil=reglapercentil)
 
 #Aplicamos los metodos a las variables:
@@ -395,14 +409,9 @@ head(datos_fich_dig_OUT)
 
 #Comporbamos el número de outliers detectados por método:
 datos_fich_dig_OUT %>% select(contains("regla")) %>% summarise(across(everything(), ~sum(.,na.rm = T
-)))%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
+)))
 
-
-```
-
-```{r, include=FALSE}
-
-# Valores etiquetados como outliers, ordenados de menor a mayor:
+# Valores etiquetados como outliers, ordenados de menor a mayor, de las distintas variables:
 sort(datos_fich_dig_OUT$HR1[datos_fich_dig_OUT$HR1_reglasigma])
 sort(datos_fich_dig_OUT$HR1[datos_fich_dig_OUT$HR1_reglaboxplot])
 sort(datos_fich_dig_OUT$HR1[datos_fich_dig_OUT$HR1_reglapercentil])
@@ -428,14 +437,16 @@ summary(datos_fich_anal2)%>%kable()%>%kable_styling( bootstrap_options = c("stri
 head(datos_fich_anal2)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
 tail(datos_fich_anal2)%>%kable()%>%kable_styling( bootstrap_options = c("striped", "hover"), full_width = F)
 ```
-```{r, include=FALSE}
 
+```{r, include=FALSE}
 #Observamos si hay valores NA, NULL o INF:
 any(is.na(datos_fich_anal2))
 any(is.null(datos_fich_anal2))
 apply(datos_fich_anal2,2,function(x){any(is.infinite(x))})
 
-# Regla 3 sigma
+
+# Regla 3 sigma:Considera que los datos siguen una distribución gaussiana. Datos típicos caracterizados por la media 
+#y la dispersión por la varianza. Valores por encima de 3 desviaciones típicas se consideran outliers.
 reglasigma <- function(x) { 
   m <- mean(x,na.rm = T)
   s <- sd(x,na.rm = T)
@@ -443,15 +454,10 @@ reglasigma <- function(x) {
 }
 
 
-# Identificador Hampel
-reglahampel <- function(x) { 
-  m <- median(x,na.rm = T)
-  s <- madm(x,na.rm = T)
-  out <- (x>(m+3*s)|x<(m-3*s))
-}
-
-
-# Regla boxplot
+# Regla boxplot:A partir de los datos se calcula su diagrama de caja (boxplot) y se definen como datos típicos 
+#superiores hasta el cuartil 75%, x_s; datos típicos inferiores hasta el cuartil 25%, x_i; y la dispersión se 
+#define como el rango intercuartílico (IQR= x_s-x_i). Valores por encima de x_s+1.5*IQR o por debajo de x_i-1.5* IQR 
+#se consideran outliers.
 reglaboxplot <- function(x) { 
   q1 <- quantile(x, 1 / 4, na.rm = T)
   q2 <- quantile(x, 3 / 4, na.rm = T)
@@ -460,7 +466,7 @@ reglaboxplot <- function(x) {
 }
 
 
-# Percentiles
+# Percentiles: Cualquier valor que esté fuera del rango del percentil 5% y 95% se puede considerar como atípico. 
 reglapercentil <- function(x){ 
   q1 <- quantile(x, 0.05, na.rm = T)
   q2 <- quantile(x, 0.95, na.rm = T)
@@ -485,74 +491,40 @@ sort(datos_fich_anal2_OUT$fich_anal[datos_fich_anal2_OUT$fich_anal_reglaboxplot]
 sort(datos_fich_anal2_OUT$fich_anal[datos_fich_anal2_OUT$fich_anal_reglapercentil])
 ```
 
-## 3.1. Preguntas Iniciales: {#3.1.-Preguntas-Iniciales:}
-
-Vamos a llamar a las distintas pacientes por sus identificadores en las carpetas
-
-\- ¿Hay diferencia entre los datos analogicos de los distintos pacientes?
-Si vemos los datos almacenados en los ficheros analogicos de las distintas pacientes, es decir, los de las distintas carpetas; encontramos un detalle muy interesante y es que los datos en las carpetas *0519xxxiii14* y *0795xalvii8a7* rondan entre un intervalo de valores más o menos razonable. Entre 80 y 104 para *0519xxxiii14* y 69 y 97 para *0795xalvii8a7*. Sin embargo, en los datos de la paciente *1059xlxveei79_ECGf2*, los datos que vemos en el fichero analogico cambian radicalmente. En el gráfico se aprecia fácilmente, podemos ver que en intervalo ahora se situa entre -1494 y 1965. Lo que cambia completamente la manera de entender los resultados.
-
-\- ¿Hay diferencia entre los datos digitales de los distintos pacientes?
-En los datos almacenados en ficheros digitales también encontramos diferencias muy importantes entre las distintas pacientes. Como podemos observar. Tanto *0519xxxiii14* como *0795xalvii8a7* tienen muchas variables que no cambian en ningún momento, sino que se situan siempre en el valor 0. Eso nos ocurre con las variables HR2, Pd, Pm, Ps y SPO; y con la paciente *0795xalvii8a7* también nos ocurre con MHR.
-
-Esto ya en un principio podría sorprendernos, pero lo más curioso es que a la paciente *1059xlxveei79_ECGf2*, que ya hemos visto que tiene unos datos muy diferentes en el fichero analogico, tiene valores para todas estas variables. De hecho podemos observar como las variables Pd, Pm, Ps y SPO simplemente pasan de valer 0 a dar un salto y mantenerse en otro valor en un momento determinado. Y con las variables HR2 y MHR vemos que varían en cada momento y que en muchas ocasiones pasan a valer 0; lo que nos hace sospechar si pueden ser outliers.
-
-Sin embargo, podemos, al menos, suponer que existe una relación entre que los valores de las distintas variables digitales varien y que las del fichero analogico tenga un rango tan amplio. Aunque no podemos saber a qué se debe, quizás sea solo que los datos se recogieros de manera diferente o erronea.
-
-\- ¿Encontramos datos faltantes?¿Qué tipo de dato faltante son?¿A qué pueden deberse?
-Encontramos muchos datos faltantes en los datos del fichero digital de la paciente *0795xalvii8a7* tomados el dia 27 de septiembre de 2022 a las 10.11.00. Los datos faltantes no han sido inputados ni sustituidos por 0 ni nada, sino que simplemente no aparecen.
-
-Sin embargo, vemos que tenemos otro fichero tomado el mismo día 12 segundos después de estos. Esto nos lleva a cuestionarnos si el hecho de que no tengamos datos en este fichero es debido a algún problema a la hora de tomar medidas y se continuó inmediatamente. Lo que tendría sentido y explicaría que tuviesemos tan pocos datos en este fichero pero tantos en un fichero tomados a continuación.
-
-Así que suponiendo que esto sea así y que simplemente se paró la toma de medidas podemos asumir que son datos perdidos MNAR, missing not at random porque la causa es conocida. No hay que imputarlos.
-
-Por otro lado, encontramos que en muchas variables de las pacientes *0519xxxiii14* y *0795xalvii8a7* solo hay valor 0. Eso no sabemos decir si son datos falatntes o simplemente es normal que se mantengan todo el tiempo en valor 0.
-
-\- ¿Encontramos algún valor anómalo (outlier) en nuestros datos?
-Si nos fijamos en los datos de ficheros digitales vemos que siempre encontramos que las datos de la variable HR1 tienen momentos en los que produce picos hacia abajo y adquiere el valor o 16 o 0. Vemos que también le ocurre a *0519xxxiii14* en MHR y a *1059xlxveei79_ECGf2* le ocurre en muchas variables; como HR2 o TOCO, en la que de repente toma valores muy altos. Esto lo más probable es que sean errores de las máquinas al tomar mediciones, que tomen los valores 16 o 0 cuando tienen errores al tomar medidas en algun momento concreto, porque solo aparecen en 1 instante.
-
-No parece que se pueda ver un patrón en estos datos anómalos, más allá de que todos toman valor 0, 16, o similares. Pero cada valor aparece en un punto diferente y no se observa una relacion entre variables ni entre pacientes.
-
-Un posible método de imputación para todos estos datos podría ser sacar la media entre el valor anterior y posterior al del dato anómalo. Pero en la variable TOCO de *1059xlxveei79_ECGf2* no valdría la pena imputar ya que estos datos anómalos podrían ser causa de que los datos de esta pacienta difieren mucho a los de las otras.
-
-\- ¿Qué patrones o características destacables se pueden observar al comparar las diferentes variables entre si para la paciente *1059xlxveei79_ECGf2*?¿A qué puede deberse la diferencia con los otros datos?
-Como hemos comentado ya, los datos de la paciente *1059xlxveei79_ECGf2* son extrañamente diferentes a las otras 2 pacientes. Esto puede deberse a diferentes posibles causas. Pero uno en que hemos pensado, sabiendo el tipo de datos que estamos tratando, es que el feto de esta pacienta está mucho más desarrollado que los otros. LLeva más tiempo de gestación y por eso los valores se parecen más a los de una persona común.
-
-Por otra parte, lo que vemos en los datos de ficheros analogicos es que la forma sí que parece ser el de un cardiograma. Donde se observan los picos de los latidos regulares.
-
-En los ficheros digitales vemos lo siguiente, y es que en el puento 103-104 las variables Pd, Pm y Ps dan un salto y pasan de valer 0 a valer 94, 118 y 155 respectivamente. La variable SPO hace lo mismo en 236-236.25, que pasa a valer 98. Luego vemos que TOCo toma valores mucho más variados que en las otras dos pacientes y HR2 varía mucho.
-
-No podemos saber con seguridad, a partir de la informacion que tenemos el motivo de estas variaciones, pero la tesis de que la paciente lleva más semanas de gestación explicaría en parte estas diferencias; ya que indicaria que el bebé está mucho más desarrollado y se pueden tomar más medidas de él porque responde más intensamente a estímulos externos.
-
+Podemos observar tras un primer vistazo, que hay datos que que se encuentran fuera del rango en el que queremos evaluar la variable, esto puede ser debido a fallos de la maquina, a la hora de tomar los datos.
+Por tanto, procedemos a quitar valores que no nos interesan, para mostrar los datos de una manera mas clarificadora y sin datos erroneos.
 
 ## 4. Modificamos los Datos y los Visualizamos: {#4.-Modificamos-los-Datos-y-los-Visualizamos:}
+Enn este paso nos encargamos de quitar los valores anomalos de los datos iniciales y volverlos a visualizar para una mejor compresension de ellos sin errores.
 
 ### Quitamos outliers Fichero Digital:
 
 ```{r}
-
+#Sacamos los valores anomalos de la variable HR1:
 outHR1 <- which(datos_fich_dig$HR1 > mean(datos_fich_dig$HR1) + 2.5 * sd(datos_fich_dig$HR1) | 
         datos_fich_dig$HR1 < mean(datos_fich_dig$HR1) - 2.5 * sd(datos_fich_dig$HR1) | datos_fich_dig$HR1 == 16)
-
+#Intercambiamos los valores anomalos por la media de la variable:
 for (i in outHR1){
   datos_fich_dig$HR1[i] = mean(datos_fich_dig$HR1)
 }
 
-
+#Sacamos los valores anomalos de la variable HR2:
 outHR2 <- which(datos_fich_dig$HR2 > mean(datos_fich_dig$HR2) + 2.5 * sd(datos_fich_dig$HR2) | 
-        datos_fich_dig$HR2 < mean(datos_fich_dig$HR2) - 2.5 * sd(datos_fich_dig$HR2))
+        datos_fich_dig$HR2 < mean(datos_fich_dig$HR2) - 2.5 * sd(datos_fich_dig$HR2) |          datos_fich_dig$MHR == 16)
+#Intercambiamos los valores anomalos por la media de la variable:
 for (i in outHR2){
   datos_fich_dig$HR2[i] = mean(datos_fich_dig$HR2)
 }
 
-
-outMHR <- which(datos_fich_dig$MHR > mean(datos_fich_dig$MHR) + 1.5 * sd(datos_fich_dig$MHR) | 
-        datos_fich_dig$MHR < mean(datos_fich_dig$MHR) - 1.5 * sd(datos_fich_dig$MHR) |          datos_fich_dig$MHR == 16)
+#Sacamos los valores anomalos de la variable MHR:
+outMHR <- which(datos_fich_dig$MHR > mean(datos_fich_dig$MHR) + 1.2 * sd(datos_fich_dig$MHR) | 
+        datos_fich_dig$MHR < mean(datos_fich_dig$MHR) - 1.2 * sd(datos_fich_dig$MHR) |          datos_fich_dig$MHR == 16)
+#Intercambiamos los valores anomalos por la media de la variable:
 for (i in outMHR){
   datos_fich_dig$MHR[i] = mean(datos_fich_dig$MHR)
 }
 
-
+#Sacamos los valores anomalos de la variable TOCO:
 outTOCO <- c()
 for (l in 2:(length(datos_fich_dig$TOCO) - 1)){
   dat = datos_fich_dig$TOCO[l]
@@ -562,6 +534,7 @@ for (l in 2:(length(datos_fich_dig$TOCO) - 1)){
     outTOCO <- c(outTOCO, l)
   }
 }
+#Intercambiamos los valores anomalos por la media de la variable:
 for (i in outTOCO){
   datos_fich_dig$TOCO[i] = mean(datos_fich_dig$TOCO)
 }
@@ -570,20 +543,150 @@ for (i in outTOCO){
 ## Gráfico Fichero Digital sin outliers:
 
 ```{r}
+#Modificamos el data frame inicial:
 datos_fich_dig2 <- datos_fich_dig %>%
   pivot_longer(cols = -tiempo, names_to = 'nombres', values_to = 'valor')
 
+#Creamos el subconjunto:
 datos_digitales300 <- subset(datos_fich_dig2, tiempo <= 300)
 
+#Creamos el gráfico:
 grafico1 <- ggplot(datos_fich_dig2, aes(x = tiempo, y = valor, color = nombres)) + 
   geom_line() +
   labs(title = 'Fichero Digital', x = 'Tiempo', y = 'Valor', color = 'Variable') +
   theme_bw() +
   facet_wrap(.~nombres, scales = "free") + 
   scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
-  
 
-grafico <- ggplotly(grafico1)%>%
-  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
-grafico
+#Mostramos el gráfico:(Esta comentado porque la librería plotly no puede compilar a pdf)
+#grafico <- ggplotly(grafico1)%>%
+#  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico1
 ```
+
+### Quitamos outliers Fichero Analógico:
+
+```{r}
+#Una vez quitados los datos anoomalos del fichero digital, empezamos con el fichero analogico.
+#Quitamos los outliers de la unica variable del fichero analogico:
+outFICH_ANAL <- which(datos_fich_anal2$fich_anal > mean(datos_fich_anal2$fich_anal) + 2.5 * sd(datos_fich_dig$HR1) | datos_fich_anal2$fich_anal < mean(datos_fich_anal2$fich_anal) - 2.5 * sd(datos_fich_anal2$fich_anal))
+
+#Intercambiamos los valores anomalos por la media de la variable:
+datos_fich_anal2 <- datos_fich_anal2%>%
+  mutate(good_data = ifelse(fich_anal %in% outFICH_ANAL, mean(fich_anal), fich_anal))
+```
+
+### Gráfico Fichero Analógico sin outliers:
+
+```{r}
+#Creamos el subconjunto:
+datos_anal_tiemp <- subset(datos_fich_anal2, tiempo > max(tiempo)-10)
+
+#Creamos el gráfico:
+grafico1 <- ggplot(datos_anal_tiemp, aes(x = tiempo, y = good_data)) + 
+  geom_line(color = 'blue') +
+  labs(title = 'Fichero Analógico', x = 'Tiempo', y = 'Valor') +
+  theme_bw() +
+  scale_y_continuous(limits = c(-250, 1000), breaks = seq(-250, 1000, 250))
+
+#Mostramos el gráfico:(Esta comentado porque la librería plotly no puede compilar a pdf)
+#grafico <- ggplotly(grafico1)%>%
+#  layout(plot_bgcolor = 'white', paper_bgcolor = 'white')
+grafico1
+```
+## 4.1. Preguntas: {#3.1.-Preguntas:}
+
+Vamos a llamar a las distintas pacientes por sus identificadores en las carpetas.
+
+```{r, include=FALSE}
+#Para las gráficas que salen en las preguntas siguientes he usado los graficos anteriores, metiendo la ruta que contestaba a la pregunta.
+
+#Para los gráficos de las variables que se muestran solas, he usado el siguiente codigo,
+
+#grafico1 <- ggplot(datos_fich_dig, aes(x = tiempo, y = SPO2, col = SPO2))+ geom_line() + 
+#  scale_x_continuous(limits = c(0, 300), breaks = seq(0, 300, 50))
+  
+#cambiando la ruta y la variable según la pregunta.
+```
+
+
+#### \- ¿Hay diferencia entre los datos analogicos de los distintos pacientes? 
+
+Si vemos los datos almacenados en los ficheros analogicos de las distintas pacientes, es decir, los de las distintas carpetas; encontramos un detalle muy interesante y es que los datos en las carpetas *0519xxxiii14* y *0795xalvii8a7* rondan entre un intervalo de valores más o menos razonable. Entre 80 y 104 para *0519xxxiii14* y 69 y 97 para *0795xalvii8a7*. Sin embargo, en los datos de la paciente *1059xlxveei79_ECGf2*, los datos que vemos en el fichero analogico cambian radicalmente. En el gráfico se aprecia fácilmente, podemos ver que en intervalo ahora se situa entre -1494 y 1965. Lo que cambia completamente la manera de entender los resultados.
+
+![Carpeta 0519xxxiii14](Fotos_presentacion/foto primer ejercico 2.png){width=230px height=170px}
+![Carpeta 0795xalvii8a7](Fotos_presentacion/Foto primer ejercicio 3.png){width=230px height=170px}
+![Carpeta 1059xlxveei79_ECGf2](Fotos_presentacion/Foto primer ejercicio.png){width=230px height=170px}
+
+
+#### \- ¿Hay diferencia entre los datos digitales de los distintos pacientes? 
+
+En los datos almacenados en ficheros digitales también encontramos diferencias muy importantes entre las distintas pacientes. Como podemos observar. Tanto *0519xxxiii14* como *0795xalvii8a7* tienen muchas variables que no cambian en ningún momento, sino que se situan siempre en el valor 0. Eso nos ocurre con las variables HR2, Pd, Pm, Ps y SPO; y con la paciente *0795xalvii8a7* también nos ocurre con MHR.
+
+![Carpeta 0519xxxiii14](Fotos_presentacion/Foto segundo ejercicio 2.png){width=230px height=170px}
+![Carpeta 0795xalvii8a7](Fotos_presentacion/Foto segundo ejercicio 3.png){width=230px height=170px}
+
+Esto ya en un principio podría sorprendernos, pero lo más curioso es que a la paciente *1059xlxveei79_ECGf2*, que ya hemos visto que tiene unos datos muy diferentes en el fichero analogico, tiene valores para todas estas variables. De hecho podemos observar como las variables Pd, Pm, Ps y SPO simplemente pasan de valer 0 a dar un salto y mantenerse en otro valor en un momento determinado. Y con las variables HR2 y MHR vemos que varían en cada momento y que en muchas ocasiones pasan a valer 0; lo que nos hace sospechar si pueden ser outliers.
+
+![Carpeta 1059xlxveei79_ECGf2](Fotos_presentacion/Foto segundo ejercicio .png){width=230px height=170px}
+
+
+
+Sin embargo, podemos, al menos, suponer que existe una relación entre que los valores de las distintas variables digitales varien y que las del fichero analogico tenga un rango tan amplio. Aunque no podemos saber a qué se debe, quizás sea solo que los datos se recogieros de manera diferente o erronea.
+
+
+
+#### \- ¿Encontramos datos faltantes?¿Qué tipo de dato faltante son?¿A qué pueden deberse? 
+
+Encontramos muchos datos faltantes en los datos del fichero digital de la paciente *0795xalvii8a7* tomados el dia 27 de septiembre de 2022 a las 10.11.00. Los datos faltantes no han sido inputados ni sustituidos por 0 ni nada, sino que simplemente no aparecen.
+
+![Carpeta 0795xalvii8a7](Fotos_presentacion/Foto tercer ejercicio.png){width=230px height=170px}
+Sin embargo, vemos que tenemos otro fichero tomado el mismo día 12 segundos después de estos. Esto nos lleva a cuestionarnos si el hecho de que no tengamos datos en este fichero es debido a algún problema a la hora de tomar medidas y se continuó inmediatamente. Lo que tendría sentido y explicaría que tuviesemos tan pocos datos en este fichero pero tantos en un fichero tomados a continuación.
+
+![Carpeta 0795xalvii8a7](Fotos_presentacion/Foto segundo ejercicio 3.png){width=230px height=170px}
+
+
+Así que suponiendo que esto sea así y que simplemente se paró la toma de medidas podemos asumir que son datos perdidos MNAR, missing not at random, porque la causa es conocida. No hay que imputarlos.
+
+Por otro lado, encontramos que en muchas variables de las pacientes *0519xxxiii14* y *0795xalvii8a7* solo hay valor 0. Eso no sabemos decir si son datos faltantes o simplemente es normal que se mantengan todo el tiempo en valor 0.
+
+
+#### \- ¿Encontramos algún valor anómalo (outlier) en nuestros datos? 
+
+Si nos fijamos en los datos de ficheros digitales vemos que siempre encontramos que los datos de la variable HR1 tienen momentos en los que produce picos hacia abajo y adquiere el valor o 16 o 0. Vemos que también le ocurre a *0519xxxiii14* en MHR y a *1059xlxveei79_ECGf2* le ocurre en muchas variables; como HR2 o TOCO, en la que de repente toma valores muy altos. Esto lo más probable es que sean errores de las máquinas al tomar mediciones, que tomen los valores 16 o 0 cuando tienen errores al tomar medidas en algun momento concreto, porque solo aparecen en 1 instante.
+
+
+![Carpeta 0519xxxiii14(HR1)](Fotos_presentacion/Foto quinto ejercicio.png){width=230px height=170px}
+![Carpeta 0795xalvii8a7(MHR)](Fotos_presentacion/Foto quinto ejercicio 2.png){width=230px height=170px}
+![Carpeta 1059xlxveei79_ECGf2(HR2)](Fotos_presentacion/Foto quinto ejercicio 3.png){width=230px height=170px}
+![Carpeta 1059xlxveei79_ECGf2(TOCO)](Fotos_presentacion/Foto quinto ejercicio 4.png){width=230px height=170px}
+No parece que se pueda ver un patrón en estos datos anómalos, más allá de que todos toman valor 0, 16, o similares. Pero cada valor aparece en un punto diferente y no se observa una relacion entre variables ni entre pacientes.
+
+Un posible método de imputación para todos estos datos podría ser sacar la media de los valores de esa variable y asignarsela al valor anómalo. 
+
+![Carpeta 1059xlxveei79_ECGf2(sin modificar)](Fotos_presentacion/Foto segundo ejercicio .png){width=230px height=170px}
+                                                          ->
+![Carpeta 1059xlxveei79_ECGf2(modificado)](Fotos_presentacion/Foto quinto ejercicio 5.png){width=230px height=170px}
+
+
+Pero en la variable TOCO de *1059xlxveei79_ECGf2* no valdría la pena imputar ya que estos datos anómalos podrían ser causa de que los datos de esta pacienta difieren mucho a los de las otras.
+
+#### \- ¿Qué patrones o características destacables se pueden observar al comparar las diferentes variables entre si para la paciente *1059xlxveei79_ECGf2*?¿A qué puede deberse la diferencia con los otros datos? 
+
+Como hemos comentado ya, los datos de la paciente *1059xlxveei79_ECGf2* son extrañamente diferentes a las otras pacientes. Esto puede deberse a diferentes posibles causas. Pero uno en que hemos pensado, sabiendo el tipo de datos que estamos tratando, es que el feto de esta pacienta está mucho más desarrollado que los otros. LLeva más tiempo de gestación y por eso los valores se parecen más a los de una persona común.
+
+Por otra parte, lo que vemos en los datos de ficheros analogicos es que la forma sí que parece ser el de un cardiograma. Donde se observan los picos de los latidos regulares.
+
+En los ficheros digitales vemos lo siguiente, y es que en el punto 103-104 las variables Pd, Pm y Ps dan un salto y pasan de valer 0 a valer 94, 118 y 155 respectivamente. 
+
+![Carpeta 0519xxxiii14](Fotos_presentacion/Foto sexto ejercicio.png){width=230px height=170px}
+![Carpeta 0795xalvii8a7](Fotos_presentacion/Foto sexto ejercicio 2.png){width=230px height=170px}
+![Carpeta 1059xlxveei79_ECGf2](Fotos_presentacion/Foto sexto ejercicio 3.png){width=230px height=170px}
+
+La variable SPO2 hace lo mismo en 236-236.25, que pasa a valer 98. Luego vemos que TOCO toma valores mucho más variados que en las otras pacientes y HR2 varía mucho.
+
+![Carpeta 1059xlxveei79_ECGf2](Fotos_presentacion/Foto sexto ejercicio 4.png){width=230px height=170px}
+
+
+No podemos saber con seguridad, a partir de la información que tenemos el motivo de estas variaciones, pero la tesis de que la paciente lleva más semanas de gestación explicaría en parte estas diferencias; ya que indicaria que el bebé está mucho más desarrollado y se pueden tomar más medidas de él porque responde más intensamente a estímulos externos.
+
